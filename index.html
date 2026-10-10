@@ -1,1689 +1,365 @@
-<!DOCTYPE html>
-<html lang="es" class="dark scroll-smooth">
+<!doctype html>
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediaHub & Comics Studio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        heading: ['Outfit', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#f0f5ff',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
-                            900: '#1e1b4b',
-                            accent: '#ec4899',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0f172a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #475569;
-        }
-        .accordion-content {
-            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-in-out;
-            max-height: 0;
-            overflow: hidden;
-            opacity: 0;
-        }
-        .accordion-content.active {
-            max-height: 1000px;
-            opacity: 1;
-        }
-        .glass-panel {
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0d14">
+  <title>MediaHub Studio — historias para ver y descubrir</title>
+  <meta name="description" content="Tu espacio creativo para descubrir videos, imágenes, descargas y cómics.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root{color-scheme:dark;--bg:#0b0d14;--panel:#121521;--line:#ffffff12;--muted:#9298aa;--purple:#9b7bff;--mint:#9ef0cf}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:#f6f5fa;font-family:"DM Sans",sans-serif;min-height:100vh}
+    h1,h2,h3,.display{font-family:"Space Grotesk",sans-serif;letter-spacing:-.04em}
+    button,input,select,textarea{font:inherit}button{cursor:pointer}
+    .app-shell{width:100%;transition:max-width .3s ease}.app-shell.mode-vertical{max-width:560px;margin-inline:auto;min-height:100vh;border-inline:1px solid #ffffff10}.app-shell.mode-horizontal{max-width:1600px;margin-inline:auto}
+    .glass{background:rgba(18,21,33,.82);backdrop-filter:blur(20px);border:1px solid var(--line)}
+    .gradient-text{background:linear-gradient(100deg,#c4b1ff,#9ef0cf 90%);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .hero-glow:before{content:"";position:absolute;width:520px;height:520px;right:-150px;top:-200px;background:#8262e633;filter:blur(100px);pointer-events:none}
+    .poster-sheen{background:linear-gradient(180deg,transparent 35%,rgba(5,7,14,.9) 100%)}
+    .soft-scroll::-webkit-scrollbar{width:7px;height:7px}.soft-scroll::-webkit-scrollbar-thumb{background:#34394a;border-radius:99px}
+    .field{width:100%;background:#0c0f18;border:1px solid #ffffff19;border-radius:12px;padding:11px 13px;color:#f6f5fa;outline:none;transition:border .2s}
+    .field:focus{border-color:#9b7bff}.field::placeholder{color:#747b8e}
+    .field-label{display:block;font-size:.78rem;color:#bec2ce;margin-bottom:7px;font-weight:600}
+    .btn-primary{background:linear-gradient(115deg,#9b7bff,#7761e8);color:white;border:0;border-radius:12px;padding:11px 16px;font-weight:700;box-shadow:0 8px 24px #7658e52d;transition:transform .2s,filter .2s}
+    .btn-primary:hover{filter:brightness(1.12);transform:translateY(-1px)}.btn-secondary{background:#ffffff0a;border:1px solid #ffffff18;border-radius:12px;padding:10px 14px;color:#e8e8f1;transition:background .2s}.btn-secondary:hover{background:#ffffff14}
+    .nav-link{color:#a5a9b8;white-space:nowrap;transition:color .2s}.nav-link:hover,.nav-link.active{color:#fff}.nav-link.active:after{content:"";display:block;margin:5px auto -8px;width:16px;height:2px;border-radius:4px;background:#a78bfa}
+    .card{background:linear-gradient(145deg,#151927,#10131d);border:1px solid #ffffff0e;transition:transform .25s,border-color .25s}.card:hover{transform:translateY(-3px);border-color:#a78bfa55}
+    .pill{border:1px solid #ffffff18;background:#ffffff0a;border-radius:99px;padding:5px 10px;font-size:.7rem;color:#c8c7d5}
+    .accordion-content{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s ease}.accordion-content.open{grid-template-rows:1fr}.accordion-content>div{overflow:hidden}
+    .tab-btn{padding:10px 13px;border-radius:10px;color:#9ca2b3;white-space:nowrap}.tab-btn.active{background:#9b7bff20;color:#d6caff;border:1px solid #9b7bff48}
+    .toast{animation:toast-in .28s ease both}@keyframes toast-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .modal-backdrop{background:#05060bd9;backdrop-filter:blur(13px)}
+    .media-frame{position:relative;overflow:hidden;background:#090b11}
+    .media-frame iframe,.media-frame video{position:absolute;inset:0;width:100%;height:100%;border:0}
+    .aspect-poster{aspect-ratio:9/16}.aspect-landscape{aspect-ratio:16/9}
+    .horizontal-span{grid-column:span 2}
+    .no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+    .grid-adaptive{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+    @media(max-width:640px){.horizontal-span{grid-column:span 1}.mobile-pad{padding-inline:18px}.mobile-hide{display:none!important}}
+    @media(min-width:900px){.mode-horizontal .grid-adaptive{grid-template-columns:repeat(4,minmax(0,1fr))}}
+  </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
-
-    <!-- HEADER & NAVIGATION -->
-    <header class="sticky top-0 z-40 w-full glass-panel border-b border-slate-800/80">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <!-- Logo -->
-                <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('home')">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-brand-accent flex items-center justify-center shadow-lg shadow-brand-500/20">
-                        <i class="fa-solid font-bold text-white text-lg fa-layer-group"></i>
-                    </div>
-                    <span class="font-heading font-extrabold text-xl tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-brand-500">
-                        MEDIAHUB<span class="text-brand-accent">.STUDIO</span>
-                    </span>
-                </div>
-
-                <!-- Desktop Navigation Links -->
-                <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
-                    <button onclick="navigateTo('home')" id="nav-home" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-white bg-brand-600/30 border border-brand-500/30 flex items-center gap-2">
-                        <i class="fa-solid fa-house text-brand-accent"></i> Inicio
-                    </button>
-                    <button onclick="navigateTo('videos')" id="nav-videos" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all duration-200 flex items-center gap-2">
-                        <i class="fa-solid fa-circle-play text-red-400"></i> Vídeos
-                    </button>
-                    <button onclick="navigateTo('images')" id="nav-images" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all duration-200 flex items-center gap-2">
-                        <i class="fa-solid fa-image text-emerald-400"></i> Imágenes
-                    </button>
-                    <button onclick="navigateTo('downloads')" id="nav-downloads" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all duration-200 flex items-center gap-2">
-                        <i class="fa-solid fa-download text-amber-400"></i> Descargas
-                    </button>
-                    <button onclick="navigateTo('comics')" id="nav-comics" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all duration-200 flex items-center gap-2">
-                        <i class="fa-solid fa-book-open text-purple-400"></i> Cómics
-                    </button>
-                    <button onclick="navigateTo('admin')" id="nav-admin" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-amber-300 hover:text-white bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 transition-all duration-200 flex items-center gap-2">
-                        <i class="fa-solid fa-gears text-amber-400"></i> Admin
-                    </button>
-                </nav>
-
-                <!-- Sound & Security Control Buttons -->
-                <div class="flex items-center space-x-2 pl-2 border-l border-slate-800">
-                    <!-- Global Orientation Toggle -->
-                    <button id="orientation-toggle-btn" onclick="toggleGlobalOrientation()" title="Cambiar Formato General (Vertical 9:16 / Horizontal 16:9)" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2 text-xs font-semibold">
-                        <i id="orientation-icon" class="fa-solid fa-mobile-screen text-indigo-400 text-sm"></i>
-                        <span id="orientation-label" class="hidden lg:inline">Modo 9:16</span>
-                    </button>
-
-                    <button id="mute-toggle-btn" onclick="toggleGlobalMute()" title="Bloquear / Desbloquear Sonidos" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2 text-xs font-semibold">
-                        <i id="mute-icon" class="fa-solid fa-volume-high text-emerald-400 text-sm"></i>
-                        <span id="mute-label" class="hidden lg:inline">Sonido ON</span>
-                    </button>
-
-                    <button onclick="openAccessModal()" title="Cambiar Modo de Acceso" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2 text-xs font-semibold">
-                        <i id="access-badge-icon" class="fa-solid fa-unlock text-cyan-400 text-sm"></i>
-                        <span id="access-badge-text" class="hidden sm:inline">Público</span>
-                    </button>
-                </div>
-
-                <!-- Mobile Menu Button -->
-                <div class="md:hidden flex items-center">
-                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="text-slate-300 hover:text-white p-2 rounded-lg bg-slate-900 border border-slate-800">
-                        <i class="fa-solid fa-bars text-xl" id="menu-icon"></i>
-                    </button>
-                </div>
-            </div>
+<body>
+  <div id="app" class="app-shell mode-horizontal">
+    <header class="sticky top-0 z-40 border-b border-white/10 bg-[#0b0d14]/85 backdrop-blur-xl">
+      <div class="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-3 md:px-8">
+        <button class="flex shrink-0 items-center gap-2.5 text-left" data-page="inicio" aria-label="Ir al inicio">
+          <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-400 to-indigo-600 text-white shadow-lg shadow-violet-500/20"><i class="fa-solid fa-play text-xs"></i></span>
+          <span class="display text-[17px] font-bold tracking-tight">mediahub<span class="text-violet-300">.</span></span>
+        </button>
+        <nav class="no-scrollbar flex items-center gap-4 overflow-x-auto text-[13px] md:gap-6" aria-label="Navegación principal">
+          <button class="nav-link active" data-page="inicio">Inicio</button><button class="nav-link" data-page="videos">Vídeos</button><button class="nav-link" data-page="imagenes">Imágenes</button><button class="nav-link" data-page="descargas">Descargas</button><button class="nav-link" data-page="comics">Cómics</button><button class="nav-link hidden" id="admin-nav" data-page="admin">Estudio</button>
+        </nav>
+        <div class="flex shrink-0 items-center gap-2">
+          <button id="orientation-toggle" class="btn-secondary h-9 w-9 p-0 text-xs sm:h-auto sm:w-auto sm:px-3 sm:py-2 sm:inline-flex sm:items-center sm:gap-2" title="Cambiar formato de vista"><i class="fa-solid fa-mobile-screen-button"></i><span id="orientation-label" class="hidden lg:inline">Horizontal</span></button>
+          <button id="sound-toggle" class="btn-secondary h-9 w-9 p-0" title="Silenciar"><i class="fa-solid fa-volume-high"></i></button>
+          <span id="session-badge" class="inline-flex max-w-[92px] items-center truncate rounded-full border border-white/10 bg-white/5 px-2 py-1.5 text-[10px] text-slate-300 sm:max-w-none sm:px-2.5 sm:text-[11px]"><i class="fa-solid fa-globe mr-1.5 shrink-0 text-emerald-300"></i>Público</span>
+          <button id="logout-button" class="btn-secondary h-9 w-9 p-0 text-sm" title="Salir"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
         </div>
-
-        <!-- Mobile Navigation Menu -->
-        <div id="mobile-menu" class="hidden md:hidden border-b border-slate-800 bg-slate-900/95 px-4 pt-2 pb-4 space-y-2">
-            <button onclick="navigateTo('home'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg font-medium text-slate-200 hover:bg-slate-800 flex items-center gap-3">
-                <i class="fa-solid fa-house text-brand-accent"></i> Inicio
-            </button>
-            <button onclick="navigateTo('videos'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg font-medium text-slate-200 hover:bg-slate-800 flex items-center gap-3">
-                <i class="fa-solid fa-circle-play text-red-400"></i> Vídeos
-            </button>
-            <button onclick="navigateTo('images'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg font-medium text-slate-200 hover:bg-slate-800 flex items-center gap-3">
-                <i class="fa-solid fa-image text-emerald-400"></i> Imágenes
-            </button>
-            <button onclick="navigateTo('downloads'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg font-medium text-slate-200 hover:bg-slate-800 flex items-center gap-3">
-                <i class="fa-solid fa-download text-amber-400"></i> Descargas
-            </button>
-            <button onclick="navigateTo('comics'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg font-medium text-slate-200 hover:bg-slate-800 flex items-center gap-3">
-                <i class="fa-solid fa-book-open text-purple-400"></i> Cómics
-            </button>
-            <button onclick="navigateTo('admin'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg font-medium text-amber-300 hover:bg-slate-800 flex items-center gap-3">
-                <i class="fa-solid fa-gears text-amber-400"></i> Panel de Administración
-            </button>
-        </div>
+      </div>
     </header>
-
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
-        <!-- ================= PAGE 1: INICIO (HOME) ================= -->
-        <section id="page-home" class="page-content space-y-12">
-            
-            <!-- Hero Banner -->
-            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-brand-900/40 to-slate-900 p-8 sm:p-12 border border-slate-800 shadow-2xl">
-                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(99,102,241,0.15),transparent_50%)]"></div>
-                <div class="relative z-10 max-w-2xl space-y-4">
-                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-brand-500/20 text-brand-accent border border-brand-500/30">
-                        <i class="fa-solid fa-bolt text-xs"></i> Plataforma Multimedia Integrada
-                    </span>
-                    <h1 class="font-heading text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
-                        Explora contenido en <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent to-indigo-400">Formato Vertical u Horizontal</span>
-                    </h1>
-                    <p class="text-slate-300 text-base sm:text-lg leading-relaxed">
-                        Bienvenido a MediaHub. Disfruta de nuestra selección exclusiva de 5 vídeos en pestañas desplegables, galerías de imágenes en alta resolución, cómics interactivos y centro de descargas.
-                    </p>
-                    <div class="flex flex-wrap gap-3 pt-2">
-                        <button onclick="navigateTo('videos')" class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-medium shadow-lg shadow-brand-600/30 transition-all duration-200 flex items-center gap-2">
-                            Ver Vídeos <i class="fa-solid fa-arrow-right text-sm"></i>
-                        </button>
-                        <button onclick="navigateTo('comics')" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium border border-slate-700 transition-all duration-200 flex items-center gap-2">
-                            Leer Cómics <i class="fa-solid fa-book text-sm"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SECTION 1: 5 VERTICAL/HORIZONTAL VIDEOS IN ACCORDIONS -->
-            <div class="space-y-6">
-                <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                    <div>
-                        <h2 class="font-heading text-2xl font-bold text-white flex items-center gap-3">
-                            <i class="fa-solid fa-folder-closed text-brand-accent"></i> Vídeos Plegables (Pestañas Acordeón)
-                        </h2>
-                        <p class="text-slate-400 text-sm mt-1">Haz clic en cada una de las 5 pestañas para desplegar y reproducir el contenido.</p>
-                    </div>
-                </div>
-
-                <!-- Accordion Container (Rendered via JS) -->
-                <div class="space-y-4" id="home-accordion-container"></div>
-            </div>
-
-            <!-- SECTION 2: 5 VERTICAL/HORIZONTAL IMAGES GALLERY -->
-            <div class="space-y-6 pt-6">
-                <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                    <div>
-                        <h2 class="font-heading text-2xl font-bold text-white flex items-center gap-3">
-                            <i class="fa-solid fa-images text-emerald-400"></i> Galería de 5 Imágenes Destacadas
-                        </h2>
-                        <p class="text-slate-400 text-sm mt-1">Selección especial optimizada en formato vertical. Haz clic en cualquier imagen para ampliarla.</p>
-                    </div>
-                    <button onclick="navigateTo('images')" class="text-brand-accent hover:text-white text-sm font-medium transition-colors flex items-center gap-1">
-                        Ver todas <i class="fa-solid fa-chevron-right text-xs"></i>
-                    </button>
-                </div>
-
-                <!-- Vertical Images Grid Container (Rendered via JS) -->
-                <div id="home-images-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4"></div>
-            </div>
-
-        </section>
-
-        <!-- ================= PAGE 2: VIDEOS (INDEPENDIENTE) ================= -->
-        <section id="page-videos" class="page-content hidden space-y-8">
-            <div class="border-b border-slate-800 pb-6 flex flex-col md:flex-row justify-between md:items-center gap-4">
-                <div>
-                    <h1 class="font-heading text-3xl sm:text-4xl font-extrabold text-white flex items-center gap-3">
-                        <i class="fa-solid fa-film text-red-500"></i> Catálogo Completo de Vídeos
-                    </h1>
-                    <p class="text-slate-400 text-sm sm:text-base mt-2">
-                        Colección independiente con controles de orientación y permisos personalizados.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Video Grid -->
-            <div id="videos-grid-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
-        </section>
-
-        <!-- ================= PAGE 3: IMÁGENES (INDEPENDIENTE) ================= -->
-        <section id="page-images" class="page-content hidden space-y-8">
-            <div class="border-b border-slate-800 pb-6 flex flex-col sm:flex-row justify-between sm:items-end gap-4">
-                <div>
-                    <h1 class="font-heading text-3xl sm:text-4xl font-extrabold text-white flex items-center gap-3">
-                        <i class="fa-solid fa-photo-film text-emerald-400"></i> Galería de Imágenes
-                    </h1>
-                    <p class="text-slate-400 text-sm sm:text-base mt-2">
-                        Ilustraciones, artes y renders optimizados con visor dinámico.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Full Images Grid -->
-            <div id="images-grid-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
-        </section>
-
-        <!-- ================= PAGE 4: DESCARGAS (INDEPENDIENTE) ================= -->
-        <section id="page-downloads" class="page-content hidden space-y-8">
-            <div class="border-b border-slate-800 pb-6">
-                <h1 class="font-heading text-3xl sm:text-4xl font-extrabold text-white flex items-center gap-3">
-                    <i class="fa-solid fa-cloud-arrow-down text-amber-400"></i> Centro de Descargas
-                </h1>
-                <p class="text-slate-400 text-sm sm:text-base mt-2">
-                    Accede a recursos gratuitos, paquetes de wallpapers HD, cómics en formato PDF y clips multimedia.
-                </p>
-            </div>
-
-            <div id="downloads-grid-container" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-        </section>
-
-        <!-- ================= PAGE 5: CÓMICS (INDEPENDIENTE) ================= -->
-        <section id="page-comics" class="page-content hidden space-y-8">
-            <div class="border-b border-slate-800 pb-6 flex flex-col sm:flex-row justify-between sm:items-end gap-4">
-                <div>
-                    <h1 class="font-heading text-3xl sm:text-4xl font-extrabold text-white flex items-center gap-3">
-                        <i class="fa-solid fa-book-open-reader text-purple-400"></i> Lector de Cómics Verticales
-                    </h1>
-                    <p class="text-slate-400 text-sm sm:text-base mt-2">
-                        Lectura interactiva en formato continuo Webtoon vertical. Selección de entregas y episodios.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Comic Grid Shelf -->
-            <div id="comics-shelf-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
-        </section>
-
-        <!-- ================= PAGE 6: ADMIN STUDIO (GESTOR DE CONTENIDOS) ================= -->
-        <section id="page-admin" class="page-content hidden space-y-8">
-            <!-- Header Panel Admin -->
-            <div class="border-b border-slate-800 pb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 mb-2">
-                        <i class="fa-solid fa-user-shield"></i> Panel de Administración
-                    </span>
-                    <h1 class="font-heading text-3xl sm:text-4xl font-extrabold text-white flex items-center gap-3">
-                        <i class="fa-solid fa-sliders text-amber-400"></i> Gestor de Contenidos
-                    </h1>
-                    <p class="text-slate-400 text-sm sm:text-base mt-1">
-                        Sube y gestiona libremente los vídeos, imágenes, archivos de descarga y cómics de tu plataforma.
-                    </p>
-                </div>
-
-                <!-- Live Quick Stats -->
-                <div class="grid grid-cols-4 gap-2 bg-slate-900/90 p-3 rounded-2xl border border-slate-800 text-center w-full md:w-auto">
-                    <div class="px-3 py-1">
-                        <span id="stat-videos" class="block text-xl font-bold text-red-400">0</span>
-                        <span class="text-[10px] text-slate-400 font-medium">Vídeos</span>
-                    </div>
-                    <div class="px-3 py-1 border-l border-slate-800">
-                        <span id="stat-images" class="block text-xl font-bold text-emerald-400">0</span>
-                        <span class="text-[10px] text-slate-400 font-medium">Imágenes</span>
-                    </div>
-                    <div class="px-3 py-1 border-l border-slate-800">
-                        <span id="stat-downloads" class="block text-xl font-bold text-amber-400">0</span>
-                        <span class="text-[10px] text-slate-400 font-medium">Archivos</span>
-                    </div>
-                    <div class="px-3 py-1 border-l border-slate-800">
-                        <span id="stat-comics" class="block text-xl font-bold text-purple-400">0</span>
-                        <span class="text-[10px] text-slate-400 font-medium">Cómics</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Admin Category Tabs -->
-            <div class="flex border-b border-slate-800 space-x-2 overflow-x-auto pb-1">
-                <button onclick="switchAdminTab('videos')" id="admin-tab-videos" class="admin-tab-btn px-5 py-2.5 rounded-t-xl text-sm font-bold bg-brand-600 text-white border-b-2 border-brand-accent flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-video text-red-400"></i> Agregar Vídeo
-                </button>
-                <button onclick="switchAdminTab('images')" id="admin-tab-images" class="admin-tab-btn px-5 py-2.5 rounded-t-xl text-sm font-medium text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-image text-emerald-400"></i> Agregar Imagen
-                </button>
-                <button onclick="switchAdminTab('downloads')" id="admin-tab-downloads" class="admin-tab-btn px-5 py-2.5 rounded-t-xl text-sm font-medium text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-cloud-arrow-up text-amber-400"></i> Agregar Descarga
-                </button>
-                <button onclick="switchAdminTab('comics')" id="admin-tab-comics" class="admin-tab-btn px-5 py-2.5 rounded-t-xl text-sm font-medium text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-book text-purple-400"></i> Agregar Cómic
-                </button>
-                <button onclick="switchAdminTab('users')" id="admin-tab-users" class="admin-tab-btn px-5 py-2.5 rounded-t-xl text-sm font-medium text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-users-gear text-cyan-400"></i> Seguridad & Usuarios
-                </button>
-            </div>
-
-            <!-- TAB 1: FORMULARIO DE VÍDEOS -->
-            <div id="admin-form-videos" class="admin-form-panel bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-6">
-                <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-plus-circle text-red-400"></i> Publicar Nuevo Vídeo
-                </h3>
-                <form onsubmit="handleAdminAddVideo(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Título del Vídeo</label>
-                        <input id="input-video-title" type="text" placeholder="Ej: Clip Neón Sci-Fi" required class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Categoría / Etiqueta</label>
-                        <input id="input-video-category" type="text" placeholder="Ej: Animación 3D" required class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Orientación del Formato</label>
-                        <select id="input-video-orientation" class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500">
-                            <option value="vertical">📱 Vertical (9:16)</option>
-                            <option value="horizontal">💻 Horizontal (16:9)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Permisos de Visibilidad</label>
-                        <select id="input-video-access" class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500">
-                            <option value="public">🌐 Público (Todos los visitantes)</option>
-                            <option value="registered">🔐 Solo Usuarios Registrados (Modo Privado)</option>
-                            <option value="admin">🛡️ Solo Administradores</option>
-                        </select>
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Enlace del Vídeo / URL / iFrame / MP4</label>
-                        <textarea id="input-video-url" rows="2" placeholder='https://ejemplo.com/video.mp4 o código <iframe>' required class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500 font-mono"></textarea>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Imagen Poster / Portada (URL)</label>
-                        <input id="input-video-poster" type="text" placeholder="https://images.unsplash.com/..." class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Duración (Opcional)</label>
-                        <input id="input-video-duration" type="text" placeholder="Ej: 0:45" class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500">
-                    </div>
-                    <div class="md:col-span-2 flex items-center gap-3 pt-2">
-                        <input id="input-video-featured" type="checkbox" checked class="w-5 h-5 rounded border-slate-800 text-brand-600 focus:ring-brand-500 bg-slate-950">
-                        <label for="input-video-featured" class="text-sm font-medium text-slate-200">Mostrar también en la Pestaña Plegable de Inicio (Home Accordion)</label>
-                    </div>
-                    <div class="md:col-span-2 pt-3">
-                        <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-upload"></i> Publicar Vídeo
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- TAB 2: FORMULARIO DE IMÁGENES -->
-            <div id="admin-form-images" class="admin-form-panel hidden bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-6">
-                <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-plus-circle text-emerald-400"></i> Publicar Nueva Imagen
-                </h3>
-                <form onsubmit="handleAdminAddImage(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Título de la Imagen</label>
-                        <input id="input-image-title" type="text" placeholder="Ej: Arte Abstracto 4K" required class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Enlace de la Imagen (URL)</label>
-                        <input id="input-image-url" type="text" placeholder="https://images.unsplash.com/..." required class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500 font-mono">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Orientación del Formato</label>
-                        <select id="input-image-orientation" class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500">
-                            <option value="vertical">📱 Vertical (9:16)</option>
-                            <option value="horizontal">💻 Horizontal (16:9)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Permisos de Visibilidad</label>
-                        <select id="input-image-access" class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500">
-                            <option value="public">🌐 Público (Todos)</option>
-                            <option value="registered">🔐 Solo Usuarios Registrados</option>
-                            <option value="admin">🛡️ Solo Administradores</option>
-                        </select>
-                    </div>
-                    <div class="md:col-span-2 pt-3">
-                        <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-upload"></i> Publicar Imagen
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- TAB 3: FORMULARIO DE DESCARGAS -->
-            <div id="admin-form-downloads" class="admin-form-panel hidden bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-6">
-                <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-plus-circle text-amber-400"></i> Agregar Archivo de Descarga
-                </h3>
-                <form onsubmit="handleAdminAddDownload(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Nombre del Recurso</label>
-                        <input id="input-download-title" type="text" placeholder="Ej: Pack de Wallpapers HD" required class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Tipo / Formato de Archivo</label>
-                        <select id="input-download-type" class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500">
-                            <option value="PDF">Documento PDF</option>
-                            <option value="ZIP">Archivo Comprimido ZIP</option>
-                            <option value="MP4">Vídeo MP4</option>
-                            <option value="BRUSHSET">Set de Pinceles / Recurso</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Tamaño del Archivo</label>
-                        <input id="input-download-size" type="text" placeholder="Ej: 45.8 MB" required class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Versión / Etiqueta</label>
-                        <input id="input-download-version" type="text" placeholder="Ej: v1.0" required class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Orientación Recomendada</label>
-                        <select id="input-download-orientation" class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500">
-                            <option value="vertical">📱 Vertical (9:16)</option>
-                            <option value="horizontal">💻 Horizontal (16:9)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Permisos de Visibilidad</label>
-                        <select id="input-download-access" class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500">
-                            <option value="public">🌐 Público (Todos)</option>
-                            <option value="registered">🔐 Solo Usuarios Registrados</option>
-                            <option value="admin">🛡️ Solo Administradores</option>
-                        </select>
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Enlace / URL de Descarga Directa</label>
-                        <input id="input-download-url" type="url" placeholder="https://ejemplo.com/archivo.zip" required class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500 font-mono">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Descripción Breve</label>
-                        <textarea id="input-download-desc" rows="2" placeholder="Describe el contenido de este paquete..." required class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500"></textarea>
-                    </div>
-                    <div class="md:col-span-2 pt-3">
-                        <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-cloud-arrow-up"></i> Publicar Recurso
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- TAB 4: FORMULARIO DE CÓMICS -->
-            <div id="admin-form-comics" class="admin-form-panel hidden bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-6">
-                <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-plus-circle text-purple-400"></i> Publicar Nuevo Capítulo de Cómic
-                </h3>
-                <form onsubmit="handleAdminAddComic(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Título del Capítulo</label>
-                        <input id="input-comic-title" type="text" placeholder="Ej: El Despertar Neón" required class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Número de Capítulo</label>
-                        <input id="input-comic-chapter" type="text" placeholder="Ej: Capítulo 01" required class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Género / Categoría</label>
-                        <input id="input-comic-genre" type="text" placeholder="Ej: Sci-Fi / Cyberpunk" required class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Orientación del Visor</label>
-                        <select id="input-comic-orientation" class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500">
-                            <option value="vertical">📱 Vertical (Formato Webtoon)</option>
-                            <option value="horizontal">💻 Horizontal (Página Ancha)</option>
-                        </select>
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Permisos de Visibilidad</label>
-                        <select id="input-comic-access" class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500">
-                            <option value="public">🌐 Público (Todos)</option>
-                            <option value="registered">🔐 Solo Usuarios Registrados</option>
-                            <option value="admin">🛡️ Solo Administradores</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Imagen Portada (URL)</label>
-                        <input id="input-comic-cover" type="text" placeholder="https://images.unsplash.com/..." required class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Sinopsis / Resumen</label>
-                        <textarea id="input-comic-desc" rows="2" placeholder="Resumen del capítulo..." required class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500"></textarea>
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Enlaces de las Páginas del Cómic (URLs separadas por comas)</label>
-                        <textarea id="input-comic-pages" rows="3" placeholder="https://imagen1.jpg, https://imagen2.jpg" required class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500 font-mono"></textarea>
-                    </div>
-                    <div class="md:col-span-2 pt-3">
-                        <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-book-open"></i> Publicar Capítulo
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- TAB 5: FORMULARIO DE SEGURIDAD Y GESTIÓN DE USUARIOS -->
-            <div id="admin-form-users" class="admin-form-panel hidden space-y-8">
-                <!-- Change Active User Password -->
-                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-6">
-                    <div class="flex items-center space-x-3 border-b border-slate-800 pb-3">
-                        <i class="fa-solid fa-key text-cyan-400 text-xl"></i>
-                        <div>
-                            <h3 class="text-xl font-bold text-white">Editar Mi Perfil: Nombre de Usuario y PIN</h3>
-                            <p class="text-xs text-slate-400">Actualiza las credenciales de la cuenta de administración activa.</p>
-                        </div>
-                    </div>
-                    <form onsubmit="handleAdminChangePassword(event)" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Nuevo Nombre de Usuario</label>
-                            <input id="input-edit-username" type="text" placeholder="Ej: admin" required class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-cyan-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">PIN Actual (6 dígitos)</label>
-                            <input id="input-curr-pin" type="password" maxlength="6" pattern="[0-9]*" placeholder="••••••" required class="w-full bg-slate-950 border border-slate-800 text-white font-mono rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-cyan-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Nuevo PIN (6 dígitos)</label>
-                            <input id="input-new-pin" type="password" maxlength="6" pattern="[0-9]*" placeholder="••••••" required class="w-full bg-slate-950 border border-slate-800 text-white font-mono rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-cyan-500">
-                        </div>
-                        <div>
-                        <div class="md:col-span-2 lg:col-span-4 pt-2 flex flex-wrap items-center gap-3">
-                            <button type="submit" class="px-6 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-sm rounded-xl shadow-lg transition-all flex items-center gap-2">
-                                <i class="fa-solid fa-shield-halved"></i> Guardar Cambios de Perfil
-                            </button>
-                            <button type="button" onclick="resetAdminCredentialsToDefault()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs rounded-xl border border-slate-700 transition-all flex items-center gap-2">
-                                <i class="fa-solid fa-rotate-left text-amber-400"></i> Restablecer a admin / 123456
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Add New User -->
-                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-6">
-                    <div class="flex items-center space-x-3 border-b border-slate-800 pb-3">
-                        <i class="fa-solid fa-user-plus text-emerald-400 text-xl"></i>
-                        <div>
-                            <h3 class="text-xl font-bold text-white">Registrar Nuevo Usuario Privado</h3>
-                            <p class="text-xs text-slate-400">Añade usuarios adicionales para acceder al modo privado y al panel de control.</p>
-                        </div>
-                    </div>
-                    <form onsubmit="handleAdminAddUser(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Nombre de Usuario</label>
-                            <input id="input-user-name" type="text" placeholder="Ej: editor1" required class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">PIN Asignado (6 dígitos)</label>
-                            <input id="input-user-pin" type="password" maxlength="6" pattern="[0-9]*" placeholder="654321" required class="w-full bg-slate-950 border border-slate-800 text-white font-mono rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Rol / Permisos</label>
-                            <select id="input-user-role" class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500">
-                                <option value="Administrador">Administrador</option>
-                                <option value="Editor">Editor de Contenidos</option>
-                                <option value="Lector VIP">Lector VIP</option>
-                            </select>
-                        </div>
-                        <div class="md:col-span-3 pt-2">
-                            <button type="submit" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-xl shadow-lg transition-all flex items-center gap-2">
-                                <i class="fa-solid fa-plus"></i> Crear Usuario Privado
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- User Inventory List -->
-                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
-                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-users text-cyan-400"></i> Usuarios Registrados
-                    </h3>
-                    <div id="admin-users-list-container" class="space-y-3"></div>
-                </div>
-            </div>
-
-            <!-- Published Inventory List -->
-            <div class="space-y-4 pt-6 border-t border-slate-800">
-                <h3 class="text-2xl font-bold text-white flex items-center gap-3">
-                    <i class="fa-solid fa-list-check text-brand-accent"></i> Inventario de Contenido Publicado
-                </h3>
-                <div id="admin-inventory-container" class="space-y-3"></div>
-            </div>
-
-        </section>
-
-    </main>
-
-    <!-- IMAGE LIGHTBOX MODAL -->
-    <div id="image-modal" class="fixed inset-0 z-50 hidden bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="relative max-w-3xl w-full max-h-[90vh] flex flex-col items-center">
-            <button onclick="closeImageModal()" class="absolute -top-12 right-0 text-slate-400 hover:text-white p-2 text-2xl">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <div class="w-full aspect-[9/16] max-h-[75vh] bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-2xl flex items-center justify-center">
-                <img id="modal-img" src="" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/600x1066/0f172a/6366f1?text=Imagen+No+Disponible'">
-            </div>
-            <p id="modal-caption" class="text-slate-200 font-medium text-center mt-4 text-base"></p>
-        </div>
-    </div>
-
-    <!-- COMIC WEBTOON READER MODAL -->
-    <div id="comic-modal" class="fixed inset-0 z-50 hidden bg-slate-950/95 backdrop-blur-lg flex flex-col">
-        <div class="px-6 py-4 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <i class="fa-solid fa-book-open text-purple-400 text-xl"></i>
-                <h3 id="comic-reader-title" class="font-bold text-white text-lg">Visor de Cómic</h3>
-            </div>
-            <button onclick="closeComicReader()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-sm font-semibold transition-colors">
-                Cerrar Lectura <i class="fa-solid fa-xmark ml-1"></i>
-            </button>
-        </div>
-        <div class="flex-1 overflow-y-auto p-4 md:p-8 flex flex-col items-center space-y-4">
-            <div class="max-w-xl w-full space-y-2"></div>
-            <div class="py-8 text-center space-y-3">
-                <p class="text-slate-400 text-sm">Fin del capítulo actual</p>
-                <button onclick="closeComicReader()" class="px-6 py-2.5 bg-purple-600 text-white font-bold rounded-xl shadow-lg hover:bg-purple-500 transition-colors">
-                    Volver a la Galería
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- TOAST NOTIFICATION CONTAINER -->
-    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 border border-brand-500/40 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center space-x-3">
-        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
-        <span id="toast-message" class="text-sm font-medium">Notificación</span>
-    </div>
-
-    <!-- ACCESS CONTROL & GATEWAY MODAL OVERLAY -->
-    <div id="access-modal" class="fixed inset-0 z-50 hidden bg-slate-950/95 backdrop-blur-2xl flex items-center justify-center p-4">
-        <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-            <div class="text-center space-y-2 mb-6">
-                <div class="w-14 h-14 bg-gradient-to-tr from-brand-600 to-brand-accent rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-brand-500/20 mb-3">
-                    <i class="fa-solid fa-shield-halved text-2xl text-white"></i>
-                </div>
-                <h2 class="font-heading text-2xl font-bold text-white tracking-tight">Acceso a MediaHub Studio</h2>
-                <p class="text-slate-400 text-xs sm:text-sm">Selecciona el modo de navegación para continuar</p>
-            </div>
-
-            <!-- Selector Tabs: Público vs Privado -->
-            <div class="grid grid-cols-2 gap-2 bg-slate-950 p-1.5 rounded-xl border border-slate-800 mb-6">
-                <button onclick="switchAccessTab('public')" id="tab-btn-public" class="py-2 rounded-lg text-xs font-bold transition-all bg-brand-600 text-white shadow">
-                    <i class="fa-solid fa-globe mr-1"></i> Público
-                </button>
-                <button onclick="switchAccessTab('private')" id="tab-btn-private" class="py-2 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white">
-                    <i class="fa-solid fa-lock mr-1"></i> Privado
-                </button>
-            </div>
-
-            <!-- Form Tab 1: MODO PÚBLICO -->
-            <div id="access-form-public" class="space-y-5">
-                <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800/80 text-center space-y-2">
-                    <i class="fa-solid fa-circle-check text-emerald-400 text-2xl"></i>
-                    <h4 class="text-white text-sm font-bold">Navegación Libre</h4>
-                    <p class="text-slate-400 text-xs leading-relaxed">
-                        Acceso directo para explorar vídeos, imágenes, cómics y descargas públicas.
-                    </p>
-                </div>
-                <button onclick="loginAsPublic()" class="w-full py-3 bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm rounded-xl shadow-lg shadow-brand-600/30 transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-check"></i> Aceptar y Entrar
-                </button>
-            </div>
-
-            <!-- Form Tab 2: MODO PRIVADO -->
-            <div id="access-form-private" class="hidden space-y-4">
-                <div class="bg-amber-500/10 border border-amber-500/20 p-3 rounded-xl text-xs text-amber-300 flex items-center gap-2">
-                    <i class="fa-solid fa-key text-sm"></i>
-                    <span>Desbloquea el Panel de Administración y contenido privado.</span>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Nombre de Usuario</label>
-                    <div class="relative">
-                        <i class="fa-solid fa-user absolute left-3.5 top-3 text-slate-500 text-xs"></i>
-                        <input id="login-username" type="text" placeholder="Ej: admin" class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:border-brand-500">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Contraseña / PIN de 6 Dígitos</label>
-                    <div class="relative">
-                        <i class="fa-solid fa-lock absolute left-3.5 top-3 text-slate-500 text-xs"></i>
-                        <input id="login-pin" type="password" maxlength="6" pattern="[0-9]*" placeholder="••••••" class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl pl-9 pr-4 py-2.5 text-sm font-mono tracking-widest text-lg focus:outline-none focus:border-brand-500">
-                    </div>
-                    <p class="text-[11px] text-slate-500 mt-1">Clave inicial por defecto: <span class="font-mono text-slate-400">admin / 123456</span></p>
-                </div>
-                <div id="login-error" class="hidden text-xs text-red-400 bg-red-500/10 border border-red-500/20 p-2.5 rounded-lg text-center font-medium">
-                    Usuario o PIN de 6 dígitos incorrectos.
-                </div>
-                <button onclick="loginAsPrivate()" class="w-full py-3 bg-gradient-to-r from-brand-600 to-brand-accent hover:opacity-90 text-white font-bold text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-unlock"></i> Iniciar Sesión Privada
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- FOOTER -->
-    <footer class="border-t border-slate-800/80 bg-slate-950 py-8 mt-12 text-center text-slate-500 text-sm">
-        <div class="max-w-7xl mx-auto px-4">
-            <p>&copy; 2026 MediaHub Studio. Todos los derechos reservados. Optimizado para formato vertical y horizontal.</p>
-        </div>
+    <main id="page-content" class="min-h-[75vh]"></main>
+    <footer class="border-t border-white/10 px-5 py-8 text-center text-xs text-slate-500">
+      <p><span class="text-slate-300">mediahub.</span> Un espacio para descubrir historias. <span class="mx-2">·</span> Hecho para compartir.</p>
     </footer>
-
-    <!-- JAVASCRIPT CONTROLLER -->
-    <script>
-        let isMuted = false;
-        let accessMode = 'public'; // 'public' or 'private'
-        let authenticatedUser = null;
-        let globalOrientation = 'vertical'; // 'vertical' (9:16) or 'horizontal' (16:9)
-
-        // GUARANTEED PUBLIC MEDIA DATA MODEL
-        let appData = {
-            users: [
-                { id: 'u1', username: 'admin', pin: '123456', role: 'Administrador' }
-            ],
-            videos: [
-                {
-                    id: 'v1',
-                    title: 'Pestaña 1: Vídeo Vertical Sci-Fi',
-                    category: 'Animación & 3D',
-                    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-                    poster: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&auto=format&fit=crop&q=80',
-                    duration: '0:15',
-                    featuredAccordion: true,
-                    orientation: 'vertical',
-                    access: 'public'
-                },
-                {
-                    id: 'v2',
-                    title: 'Pestaña 2: Paisaje Natural 16:9',
-                    category: 'Naturaleza',
-                    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-                    poster: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=800&auto=format&fit=crop&q=80',
-                    duration: '0:15',
-                    featuredAccordion: true,
-                    orientation: 'horizontal',
-                    access: 'public'
-                },
-                {
-                    id: 'v3',
-                    title: 'Pestaña 3: Cyberpunk City Loop',
-                    category: 'VFX & Neón',
-                    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
-                    poster: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80',
-                    duration: '0:15',
-                    featuredAccordion: true,
-                    orientation: 'vertical',
-                    access: 'public'
-                },
-                {
-                    id: 'v4',
-                    title: 'Pestaña 4: Arte Abstracto VIP',
-                    category: 'Exclusivo',
-                    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoylikes.mp4',
-                    poster: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&auto=format&fit=crop&q=80',
-                    duration: '0:15',
-                    featuredAccordion: true,
-                    orientation: 'vertical',
-                    access: 'registered'
-                },
-                {
-                    id: 'v5',
-                    title: 'Pestaña 5: Demostración de Animación 3D',
-                    category: 'Motion Design',
-                    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
-                    poster: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800&auto=format&fit=crop&q=80',
-                    duration: '0:15',
-                    featuredAccordion: true,
-                    orientation: 'vertical',
-                    access: 'public'
-                }
-            ],
-            images: [
-                { id: 'img1', title: '01. Arte Neón Futura', url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80', orientation: 'vertical', access: 'public' },
-                { id: 'img2', title: '02. Metrópolis Cyberpunk', url: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&auto=format&fit=crop&q=80', orientation: 'horizontal', access: 'public' },
-                { id: 'img3', title: '03. Retrato Ilustrado', url: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&auto=format&fit=crop&q=80', orientation: 'vertical', access: 'public' },
-                { id: 'img4', title: '04. Montañas y Galaxia', url: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=800&auto=format&fit=crop&q=80', orientation: 'vertical', access: 'public' },
-                { id: 'img5', title: '05. Luces Abstractas HD', url: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800&auto=format&fit=crop&q=80', orientation: 'vertical', access: 'public' }
-            ],
-            downloads: [
-                { id: 'd1', title: 'Comic Pack Completo Vol. 1', type: 'PDF', size: '48.5 MB', version: 'v2.4', desc: 'Capítulos 01 al 05 compilados en formato digital PDF.', downloads: 1420, url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', orientation: 'vertical', access: 'public' },
-                { id: 'd2', title: 'Pack de Wallpapers Horizontal 4K', type: 'ZIP', size: '120 MB', version: 'v1.0', desc: 'Colección Ultra HD de fondos de pantalla.', downloads: 3890, url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4', orientation: 'horizontal', access: 'public' }
-            ],
-            comics: [
-                {
-                    id: 'c1',
-                    title: 'El Despertar Neón',
-                    chapter: 'Capítulo 01',
-                    genre: 'Sci-Fi / Cyberpunk',
-                    cover: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&auto=format&fit=crop&q=80',
-                    desc: 'En una metrópolis dominada por la tecnología, un hacker descubre un secreto antiguo.',
-                    orientation: 'vertical',
-                    access: 'public',
-                    pages: [
-                        'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=1000&auto=format&fit=crop&q=80',
-                        'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1000&auto=format&fit=crop&q=80',
-                        'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1000&auto=format&fit=crop&q=80'
-                    ]
-                }
-            ]
-        };
-
-        function loadDataFromStorage() {
-            try {
-                const storedData = localStorage.getItem('mediahub_studio_data');
-                if (storedData) {
-                    const parsed = JSON.parse(storedData);
-                    appData = { ...appData, ...parsed };
-                }
-                const storedUser = localStorage.getItem('mediahub_active_user');
-                if (storedUser) {
-                    authenticatedUser = storedUser;
-                    accessMode = 'private';
-                }
-            } catch (e) {
-                console.error('Error al cargar datos desde localStorage:', e);
-            }
+  </div>
+  <div id="modal-root"></div><div id="toast-root" class="fixed bottom-5 right-5 z-[100] flex max-w-[calc(100vw-2.5rem)] flex-col gap-2"></div>
+  <script>
+    (() => {
+      "use strict";
+      const STORAGE_KEY = "mediahub-studio-v1";
+      const img = (id, w=900) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=85`;
+      const seed = {
+        users:[{id:"admin-default",username:"admin",pin:"123456",role:"Administrador"}],
+        items:[
+          {id:"v1",type:"video",title:"Luz de invierno",category:"Cortometraje",source:"https://www.w3schools.com/html/mov_bbb.mp4",poster:img("photo-1470252649378-9c29740c9fa8"),duration:"02:14",orientation:"horizontal",visibility:"public",featured:true,description:"Un viaje visual entre la calma y la luz."},
+          {id:"v2",type:"video",title:"Entre montañas",category:"Naturaleza",source:"https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",poster:img("photo-1464822759023-fed622ff2c3b"),duration:"00:42",orientation:"vertical",visibility:"public",featured:true,description:"Un instante de quietud en las alturas."},
+          {id:"v3",type:"video",title:"Ciudad en movimiento",category:"Documental",source:"https://www.w3schools.com/html/movie.mp4",poster:img("photo-1519608487953-e999c86e7455"),duration:"01:36",orientation:"horizontal",visibility:"public",featured:true,description:"La ciudad despierta, plano a plano."},
+          {id:"v4",type:"video",title:"Pequeños universos",category:"Animación",source:"https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",poster:img("photo-1441974231531-c6227db76b6e"),duration:"00:58",orientation:"vertical",visibility:"public",featured:true,description:"Naturaleza en primer plano."},
+          {id:"v5",type:"video",title:"Rutas del mar",category:"Viajes",source:"https://www.w3schools.com/html/mov_bbb.mp4",poster:img("photo-1518837695005-2083093ee35b"),duration:"03:08",orientation:"horizontal",visibility:"public",featured:true,description:"Una travesía por aguas abiertas."},
+          ...[
+            ["i1","Luz entre hojas","photo-1441974231531-c6227db76b6e","Naturaleza","horizontal"],
+            ["i2","Azul profundo","photo-1518837695005-2083093ee35b","Paisaje","vertical"],
+            ["i3","Hora dorada","photo-1470252649378-9c29740c9fa8","Fotografía","horizontal"],
+            ["i4","Horizonte abierto","photo-1464822759023-fed622ff2c3b","Aventura","vertical"],
+            ["i5","Ciudad nocturna","photo-1519608487953-e999c86e7455","Urbano","horizontal"]
+          ].map(([id,title,picture,category,orientation])=>({id,type:"image",title,category,source:img(picture,1200),orientation,visibility:"public",description:"Una imagen seleccionada para la colección destacada."})),
+          {id:"d1",type:"download",title:"Paquete de fondos — Naturaleza",category:"Recursos",fileType:"ZIP",size:"24.8 MB",version:"1.2.0",url:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",orientation:"horizontal",visibility:"public",downloads:128,description:"Una colección de fondos para tus proyectos creativos."},
+          {id:"d2",type:"download",title:"Guía de composición visual",category:"Guías",fileType:"PDF",size:"3.2 MB",version:"2.0.1",url:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",orientation:"vertical",visibility:"public",downloads:84,description:"Principios prácticos para contar mejores historias."},
+          {id:"d3",type:"download",title:"Cortometraje: Luz de invierno",category:"Vídeo",fileType:"MP4",size:"86 MB",version:"1.0.0",url:"https://www.w3schools.com/html/mov_bbb.mp4",orientation:"horizontal",visibility:"public",downloads:52,description:"Descarga el cortometraje en alta calidad."},
+          {id:"c1",type:"comic",title:"La última estrella",category:"Fantasía",chapter:"Capítulo 01",cover:img("photo-1534447677768-be436bb09401"),pages:[img("photo-1534796636912-3b95b3ab5986"),img("photo-1462331940025-496dfbfc7564"),img("photo-1500530855697-b586d89ba3ee")],orientation:"vertical",visibility:"public",description:"Cuando el cielo se queda sin estrellas, Mara encuentra una luz que nadie más puede ver."},
+          {id:"c2",type:"comic",title:"Cartas desde el mar",category:"Aventura",chapter:"Capítulo 02",cover:img("photo-1518837695005-2083093ee35b"),pages:[img("photo-1500375592092-40eb2168fd21"),img("photo-1497436072909-60f36e1d4b1b"),img("photo-1473116763249-2faaef81ccda")],orientation:"horizontal",visibility:"public",description:"Una carta en una botella cambia el rumbo de una travesía."}
+        ]
+      };
+      function loadState(){
+        try {
+          const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||"null");
+          if(saved&&Array.isArray(saved.items)&&Array.isArray(saved.users)) return {...seed,...saved,items:saved.items,users:saved.users};
+        } catch(error){ console.error("No se pudo leer el contenido guardado.",error); }
+        return {...seed,session:null,muted:false,orientationMode:"horizontal",downloads:{}};
+      }
+      let state=loadState(), page=location.hash.slice(1)||"inicio", adminTab="publicacion", activeComic=null, openAccordion=null, selectedType="video";
+      const $=(selector,root=document)=>root.querySelector(selector), $$=(selector,root=document)=>Array.from(root.querySelectorAll(selector));
+      const esc=(value="")=>String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+      const persist=()=>{try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}catch(error){console.error("No se pudieron guardar los cambios.",error);toast("No se pudo guardar en este dispositivo.","error")}};
+      const id=()=>`${Date.now().toString(36)}${Math.random().toString(36).slice(2,8)}`;
+      const user=()=>state.users.find(u=>u.id===state.session?.userId)||null;
+      const isPrivate=()=>Boolean(user());
+      const isAdmin=()=>user()?.role==="Administrador";
+      const canSee=item=>item.visibility==="public"|| (isPrivate()&&item.visibility==="registered") || (isAdmin()&&item.visibility==="admin");
+      const visibleItems=type=>state.items.filter(item=>item.type===type&&canSee(item));
+      const format=item=>item.orientation==="vertical"?"vertical":"horizontal";
+      const visibilityLabel=value=>({public:"Público",registered:"Usuarios registrados",admin:"Administradores"}[value]||"Público");
+      const setHash=next=>{page=next;location.hash=next;render()};
+      function toast(message,type="success"){
+        const node=document.createElement("div");node.className="toast glass rounded-xl px-4 py-3 text-sm shadow-2xl "+(type==="error"?"text-rose-200":"text-slate-100");
+        node.innerHTML=`<i class="fa-solid ${type==="error"?"fa-circle-exclamation text-rose-300":"fa-circle-check text-emerald-300"} mr-2"></i>${esc(message)}`;
+        $("#toast-root").append(node);setTimeout(()=>node.remove(),3400)
+      }
+      function filtered(){
+        if(!isPrivate())return state.items.filter(x=>x.visibility==="public");
+        return state.items.filter(x=>x.visibility!=="admin"||isAdmin());
+      }
+      function routeAllowed(next){
+        if(next==="admin"&&!isPrivate()){toast("Inicia sesión en modo privado para acceder al estudio.","error");return "inicio"}
+        if(next==="admin"&&user()?.role==="Lector VIP"){toast("Tu cuenta no tiene permisos para el estudio.","error");return "inicio"}
+        return next;
+      }
+      function cardClass(item){return format(item)==="vertical"?"aspect-poster":"aspect-landscape"}
+      function orientCard(item){return format(item)==="horizontal"?"horizontal-span":""}
+      function imageCard(item,featured=false){
+        return `<button class="card group relative overflow-hidden rounded-2xl text-left ${orientCard(item)}" data-image="${esc(item.id)}" aria-label="Ver imagen ${esc(item.title)}">
+          <div class="relative ${cardClass(item)}"><img src="${esc(item.source)}" alt="${esc(item.title)}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" onerror="this.src='https://placehold.co/900x600/171827/aaa?text=Imagen+no+disponible'"><div class="poster-sheen absolute inset-0"></div>
+          <div class="absolute inset-x-0 bottom-0 p-4"><span class="pill">${esc(item.category||"Galería")}</span><h3 class="mt-2 text-base font-semibold">${esc(item.title)}</h3></div><span class="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-black/35 text-white backdrop-blur"><i class="fa-solid fa-up-right-and-down-left-from-center text-xs"></i></span></div>
+        </button>`
+      }
+      function videoCard(item){
+        return `<article class="card overflow-hidden rounded-2xl ${orientCard(item)}"><button data-play="${esc(item.id)}" class="group relative block w-full text-left"><div class="media-frame ${cardClass(item)}"><img class="h-full w-full object-cover transition duration-500 group-hover:scale-105" src="${esc(item.poster||"")}" alt="${esc(item.title)}" onerror="this.src='https://placehold.co/600x900/171827/aaa?text=Vista+previa'"><div class="poster-sheen absolute inset-0"></div><span class="absolute inset-0 m-auto flex h-12 w-12 items-center justify-center rounded-full border border-white/40 bg-white/20 text-white backdrop-blur"><i class="fa-solid fa-play ml-0.5"></i></span><span class="pill absolute bottom-3 right-3">${esc(item.duration||"Vídeo")}</span></div></button><div class="p-4"><div class="mb-2 flex flex-wrap gap-2"><span class="pill">${esc(item.category||"Vídeo")}</span><span class="pill">${format(item)==="vertical"?"9:16 vertical":"16:9 horizontal"}</span></div><h3 class="font-semibold">${esc(item.title)}</h3><p class="mt-1 line-clamp-2 text-xs leading-5 text-slate-400">${esc(item.description||"")}</p></div></article>`
+      }
+      function downloadCard(item){
+        const count=Number(state.downloads?.[item.id]??item.downloads??0);
+        return `<article class="card flex flex-col overflow-hidden rounded-2xl ${orientCard(item)}"><div class="relative ${cardClass(item)} overflow-hidden bg-gradient-to-br from-violet-500/20 via-[#19172a] to-emerald-300/10"><div class="absolute inset-0 opacity-25" style="background-image:radial-gradient(circle at 75% 20%,#b8a6ff 0,transparent 35%),radial-gradient(circle at 15% 80%,#7eddb7 0,transparent 35%)"></div><span class="absolute left-4 top-4 pill">${esc(item.fileType||"ARCHIVO")}</span><span class="absolute right-4 top-4 pill">${format(item)==="vertical"?"9:16":"16:9"}</span><span class="absolute inset-0 flex items-center justify-center"><i class="fa-solid ${item.fileType==="PDF"?"fa-file-pdf":item.fileType==="ZIP"?"fa-file-zipper":"fa-film"} text-5xl text-white/80 drop-shadow-lg"></i></span><span class="absolute bottom-4 left-4 text-xs text-white/70">${esc(item.category||"Recursos")}</span></div><div class="flex flex-1 flex-col p-5"><div class="flex-1"><h3 class="font-semibold">${esc(item.title)}</h3><p class="mt-2 text-sm leading-6 text-slate-400">${esc(item.description||"")}</p><div class="mt-4 flex flex-wrap gap-2"><span class="pill">${esc(item.size||"Tamaño variable")}</span><span class="pill">v${esc(item.version||"1.0")}</span></div></div><div class="mt-5 flex items-center justify-between gap-3 border-t border-white/10 pt-4"><span class="text-xs text-slate-500"><i class="fa-solid fa-download mr-1"></i>${count} descargas</span><a class="btn-primary inline-flex items-center gap-2 text-xs" href="${esc(safeUrl(item.url)||"#")}" download target="_blank" rel="noopener" data-download="${esc(item.id)}">Descargar <i class="fa-solid fa-arrow-down"></i></a></div></div></article>`
+      }
+      function comicCard(item){
+        return `<button class="card group overflow-hidden rounded-2xl text-left ${orientCard(item)}" data-comic="${esc(item.id)}"><div class="relative ${cardClass(item)}"><img src="${esc(item.cover||"")}" alt="Portada de ${esc(item.title)}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" onerror="this.src='https://placehold.co/600x900/171827/aaa?text=Portada'"><div class="poster-sheen absolute inset-0"></div><div class="absolute inset-x-0 bottom-0 p-4"><span class="pill">${esc(item.chapter||"Cómic")}</span><h3 class="mt-2 text-lg font-semibold">${esc(item.title)}</h3><p class="mt-1 line-clamp-2 text-xs text-slate-300">${esc(item.description||"")}</p></div><span class="absolute right-3 top-3 rounded-full bg-violet-500/90 px-3 py-1.5 text-xs font-bold"><i class="fa-solid fa-book-open mr-1"></i>Leer</span></div></button>`
+      }
+      function safeUrl(value){
+        try{const parsed=new URL(String(value||""),location.href);return ["https:","http:"].includes(parsed.protocol)?parsed.href:null}catch{return null}
+      }
+      function mediaUrl(source){
+        const raw=String(source||"").trim();let src=raw;
+        const iframeSrc=raw.match(/<iframe\b[^>]*\bsrc=["']([^"']+)["']/i);if(iframeSrc)src=iframeSrc[1];
+        const safe=safeUrl(src);if(!safe)return null;
+        try{
+          const parsed=new URL(safe);
+          if(parsed.hostname==="youtu.be"){parsed.pathname="/embed/"+parsed.pathname.slice(1);parsed.searchParams.set("enablejsapi","1");parsed.searchParams.set("origin",location.origin);if(state.muted)parsed.searchParams.set("mute","1");return parsed.href}
+          if(parsed.hostname.includes("youtube.com")){
+            if(!parsed.pathname.includes("/embed/")){const videoId=parsed.searchParams.get("v");if(videoId)parsed.pathname="/embed/"+videoId}
+            parsed.searchParams.set("enablejsapi","1");parsed.searchParams.set("origin",location.origin);if(state.muted)parsed.searchParams.set("mute","1");return parsed.href
+          }
+          if(parsed.hostname.includes("vimeo.com")&&!parsed.hostname.includes("player.vimeo.com"))parsed.pathname="/video"+parsed.pathname;
+          if(parsed.hostname.includes("vimeo.com"))parsed.searchParams.set("muted",state.muted?"1":"0");
+          return parsed.href
+        }catch{return null}
+      }
+      function player(item,autoplay=false){
+        const source=safeUrl(item.source),embed=mediaUrl(item.source);
+        if(!source)return `<div class="flex h-full flex-col items-center justify-center gap-3 bg-slate-900 p-8 text-center text-slate-300"><i class="fa-solid fa-triangle-exclamation text-2xl text-amber-300"></i><span>El recurso no está disponible o su dirección no es válida.</span></div>`;
+        if(/\.(mp4|webm|ogg)(?:[?#]|$)/i.test(new URL(source).pathname+new URL(source).search)){
+          return `<video controls playsinline preload="metadata" ${state.muted?"muted":""} ${autoplay?"autoplay":""} poster="${esc(item.poster||"")}" class="h-full w-full object-contain" onerror="this.outerHTML='<div class=&quot;flex h-full items-center justify-center p-8 text-center text-slate-300&quot;>No se pudo cargar este vídeo. Comprueba el enlace e inténtalo de nuevo.</div>'"><source src="${esc(source)}" type="${/\.webm/i.test(source)?"video/webm":/\.ogg/i.test(source)?"video/ogg":"video/mp4"}">Tu navegador no puede reproducir este vídeo.</video>`
         }
-
-        function saveDataToStorage() {
-            try {
-                localStorage.setItem('mediahub_studio_data', JSON.stringify(appData));
-                if (authenticatedUser) {
-                    localStorage.setItem('mediahub_active_user', authenticatedUser);
-                } else {
-                    localStorage.removeItem('mediahub_active_user');
-                }
-            } catch (e) {
-                console.error('Error al guardar datos en localStorage:', e);
-            }
+        if(embed)return `<iframe src="${esc(embed)}${autoplay?(embed.includes("?")?"&":"?")+"autoplay=1":""}" title="${esc(item.title)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe>`;
+        return `<div class="flex h-full items-center justify-center p-8 text-center text-slate-300">No se pudo cargar este recurso.</div>`
+      }
+      const sectionHead=(eyebrow,title,description="")=>`<div class="mb-7 flex flex-col justify-between gap-3 sm:flex-row sm:items-end"><div><p class="mb-2 text-[11px] font-bold uppercase tracking-[.22em] text-violet-300">${eyebrow}</p><h2 class="display text-3xl font-semibold sm:text-4xl">${title}</h2>${description?`<p class="mt-2 max-w-xl text-sm leading-6 text-slate-400">${description}</p>`:""}</div></div>`;
+      function render(){
+        page=routeAllowed(page);
+        if(location.hash.slice(1)!==page)history.replaceState(null,"","#"+page);
+        $$(".nav-link").forEach(a=>a.classList.toggle("active",a.dataset.page===page));
+        $("#admin-nav").classList.toggle("hidden",!isPrivate()||user()?.role==="Lector VIP");
+        $("#session-badge").innerHTML=isPrivate()?`<i class="fa-solid fa-user-check mr-1.5 text-violet-300"></i>${esc(user().username)}`:`<i class="fa-solid fa-globe mr-1.5 text-emerald-300"></i>Público`;
+        $("#orientation-label").textContent=state.orientationMode==="vertical"?"Vertical":"Horizontal";
+        $("#orientation-toggle").querySelector("i").className=state.orientationMode==="vertical"?"fa-solid fa-mobile-screen-button":"fa-solid fa-tablet-screen-button";
+        $("#app").classList.toggle("mode-vertical",state.orientationMode==="vertical");$("#app").classList.toggle("mode-horizontal",state.orientationMode!=="vertical");
+        $("#sound-toggle").innerHTML=`<i class="fa-solid ${state.muted?"fa-volume-xmark":"fa-volume-high"}"></i>`;$("#sound-toggle").title=state.muted?"Activar sonido":"Silenciar";
+        const root=$("#page-content");
+        if(page==="inicio")root.innerHTML=homePage();
+        else if(page==="videos")root.innerHTML=videosPage();
+        else if(page==="imagenes")root.innerHTML=imagesPage();
+        else if(page==="descargas")root.innerHTML=downloadsPage();
+        else if(page==="comics")root.innerHTML=comicsPage();
+        else if(page==="admin")root.innerHTML=adminPage();
+        else {page="inicio";root.innerHTML=homePage()}
+        bindPageActions();applyMute()
+      }
+      function homePage(){
+        const videos=visibleItems("video"),gallery=visibleItems("image");
+        const featured=videos.filter(v=>v.featured).slice(0,5);
+        return `<section class="hero-glow relative overflow-hidden"><div class="relative mx-auto grid max-w-[1440px] items-center gap-8 px-5 pb-12 pt-12 md:grid-cols-[1.04fr_.96fr] md:px-10 md:pb-16 md:pt-16">
+          <div class="relative z-10"><div class="mb-5 inline-flex items-center gap-2 rounded-full border border-violet-300/20 bg-violet-300/10 px-3 py-1.5 text-xs text-violet-200"><span class="h-1.5 w-1.5 rounded-full bg-emerald-300"></span>Tu próxima historia comienza aquí</div>
+          <h1 class="display max-w-2xl text-[2.85rem] font-semibold leading-[1.02] sm:text-6xl lg:text-7xl">Ideas que merecen <span class="gradient-text">ser vistas.</span></h1><p class="mt-5 max-w-lg text-sm leading-7 text-slate-400 sm:text-base">Un espacio para descubrir vídeos, imágenes, recursos y cómics creados para inspirar.</p>
+          <div class="mt-7 flex flex-wrap gap-3"><button class="btn-primary" data-page="videos"><i class="fa-solid fa-play mr-2 text-xs"></i>Explorar vídeos</button><button class="btn-secondary" data-page="imagenes">Ver la galería <i class="fa-solid fa-arrow-right ml-2 text-xs"></i></button></div>
+          <div class="mt-9 flex gap-7 border-t border-white/10 pt-5"><div><b class="text-xl">${videos.length}</b><span class="ml-2 text-xs text-slate-500">vídeos</span></div><div><b class="text-xl">${gallery.length}</b><span class="ml-2 text-xs text-slate-500">imágenes</span></div><div><b class="text-xl">${visibleItems("comic").length}</b><span class="ml-2 text-xs text-slate-500">cómics</span></div></div></div>
+          <div class="relative mx-auto w-full max-w-[490px]"><div class="absolute -inset-5 rounded-[36px] bg-violet-500/10 blur-2xl"></div><div class="relative grid grid-cols-2 gap-3">
+          ${featured.slice(0,4).map((v,i)=>`<button data-play="${esc(v.id)}" class="group relative ${i===1||i===2?"mt-7":""} overflow-hidden rounded-2xl border border-white/10 bg-slate-900 ${i%2===0?"aspect-[4/5]":"aspect-[4/5]"}"><img src="${esc(v.poster||"")}" alt="${esc(v.title)}" class="h-full w-full object-cover opacity-80 transition duration-500 group-hover:scale-105" onerror="this.src='https://placehold.co/500x700/171827/aaa?text=MediaHub'"><div class="poster-sheen absolute inset-0"></div><div class="absolute inset-x-0 bottom-0 p-3 text-left"><span class="text-[10px] uppercase tracking-wider text-violet-200">${esc(v.category)}</span><p class="mt-1 text-sm font-semibold">${esc(v.title)}</p></div><span class="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-black/35 text-xs"><i class="fa-solid fa-play"></i></span></button>`).join("")||`<div class="col-span-2 flex aspect-[4/3] items-center justify-center rounded-3xl border border-white/10 bg-white/[.03] text-sm text-slate-500">Tu próxima historia estará aquí.</div>`}
+          </div><div class="glass absolute -bottom-5 left-1/2 flex -translate-x-1/2 items-center gap-3 rounded-xl px-4 py-3 shadow-2xl"><span class="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-300/10 text-emerald-200"><i class="fa-solid fa-sparkles"></i></span><span class="whitespace-nowrap text-xs"><b class="block text-slate-100">Inspiración sin límites</b><span class="text-slate-400">Una colección en constante crecimiento</span></span></div></div></div></section>
+          <section class="mx-auto max-w-[1440px] px-5 py-12 md:px-10">${sectionHead("Selección del estudio","Reproduce a tu ritmo","Abre cada historia para disfrutar el reproductor adaptado a su formato.")}<div class="space-y-3">${featured.map((v,i)=>`<article class="overflow-hidden rounded-2xl border border-white/10 bg-white/[.025]"><button data-accordion="${esc(v.id)}" class="flex w-full items-center gap-4 p-4 text-left sm:p-5"><span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-400/10 text-sm text-violet-200">${String(i+1).padStart(2,"0")}</span><span class="min-w-0 flex-1"><b class="block truncate text-sm sm:text-base">${esc(v.title)}</b><span class="mt-1 block text-xs text-slate-500">${esc(v.category)} <span class="mx-1">·</span> ${format(v)==="vertical"?"Vertical 9:16":"Horizontal 16:9"}</span></span><span class="pill hidden sm:block">${esc(v.duration||"Vídeo")}</span><i class="fa-solid fa-chevron-down text-xs text-slate-500 transition ${openAccordion===v.id?"rotate-180":""}"></i></button><div class="accordion-content ${openAccordion===v.id?"open":""}"><div><div class="border-t border-white/10 bg-black/20 p-3 sm:p-5"><div class="media-frame mx-auto max-h-[680px] w-full max-w-4xl ${format(v)==="vertical"?"aspect-[9/16] max-w-sm":"aspect-video"}">${openAccordion===v.id?player(v):""}</div><p class="mt-3 text-sm text-slate-400">${esc(v.description||"")}</p></div></div></div></article>`).join("")||emptyState("Aún no hay vídeos destacados.")}</div></section>
+          <section class="mx-auto max-w-[1440px] px-5 pb-16 md:px-10">${sectionHead("Galería destacada","Momentos para guardar","Una selección de imágenes del estudio. Selecciona cualquier imagen para verla a pantalla completa.")}<div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">${gallery.slice(0,5).map(item=>imageCard(item,true)).join("")||emptyState("Todavía no hay imágenes para mostrar.")}</div><button class="btn-secondary mt-5 text-sm" data-page="imagenes">Descubrir todas las imágenes <i class="fa-solid fa-arrow-right ml-2"></i></button></section>`
+      }
+      function emptyState(text){return `<div class="col-span-full rounded-2xl border border-dashed border-white/15 px-6 py-12 text-center text-sm text-slate-500"><i class="fa-regular fa-folder-open mb-3 block text-2xl"></i>${esc(text)}</div>`}
+      function pageWrap(inner,id=""){return `<div${id?` id="${id}"`:""} class="mx-auto max-w-[1440px] px-5 py-9 md:px-10 md:py-12">${inner}</div>`}
+      function videosPage(){const items=visibleItems("video");return pageWrap(`<div class="mb-9 flex flex-wrap items-end justify-between gap-4"><div>${sectionHead("Biblioteca audiovisual","Vídeos para descubrir","Historias, ideas y momentos seleccionados para disfrutar en cualquier formato.")}</div><span class="pill">${items.length} títulos</span></div><div class="grid-adaptive gap-4">${items.map(videoCard).join("")||emptyState("Aún no hay vídeos publicados.")}</div>`)}
+      function imagesPage(){const items=visibleItems("image");return pageWrap(`${sectionHead("Colección visual","Imágenes","Una galería de fotografía e ilustración. Abre cualquier imagen para explorarla en pantalla completa.")}<div class="grid-adaptive gap-3">${items.map(i=>imageCard(i)).join("")||emptyState("Aún no hay imágenes publicadas.")}</div>`)}
+      function downloadsPage(){const items=visibleItems("download");return pageWrap(`${sectionHead("Centro de recursos","Descargas","Archivos, guías y piezas multimedia listos para llevar contigo.")}<div class="grid-adaptive gap-4">${items.map(downloadCard).join("")||emptyState("Aún no hay recursos disponibles.")}</div>`)}
+      function comicsPage(){const items=visibleItems("comic");if(activeComic){const comic=items.find(i=>i.id===activeComic);if(comic)return pageWrap(`<button id="back-comics" class="btn-secondary mb-7 text-sm"><i class="fa-solid fa-arrow-left mr-2"></i>Volver a la biblioteca</button><div class="mx-auto max-w-3xl"><div class="mb-7 text-center"><p class="text-xs uppercase tracking-[.2em] text-violet-300">${esc(comic.chapter||"Cómic")}</p><h1 class="display mt-2 text-3xl font-semibold sm:text-5xl">${esc(comic.title)}</h1><p class="mx-auto mt-3 max-w-xl text-sm leading-6 text-slate-400">${esc(comic.description||"")}</p><p class="mt-3 text-xs text-slate-500">Desplázate para leer la historia</p></div><div class="overflow-hidden rounded-2xl border border-white/10 bg-black">${(comic.pages||[]).map((src,i)=>`<img class="block h-auto w-full" src="${esc(src)}" alt="${esc(comic.title)} — página ${i+1}" loading="lazy" onerror="this.src='https://placehold.co/900x1200/171827/aaa?text=Pagina+no+disponible'">`).join("")||`<div class="p-10 text-center text-slate-400">Este cómic aún no tiene páginas.</div>`}</div><p class="py-8 text-center text-xs text-slate-500">Fin del capítulo <span class="text-violet-200">${esc(comic.chapter||"")}</span></p></div>`)}
+        return pageWrap(`${sectionHead("Lecturas en serie","Estantería de cómics","Capítulos para disfrutar en una experiencia de lectura vertical continua.")}<div class="grid-adaptive gap-4">${items.map(comicCard).join("")||emptyState("Aún no hay cómics publicados.")}</div>`)}
+      const typeNames={video:"Vídeos",image:"Imágenes",download:"Descargas",comic:"Cómics"};
+      function adminPage(){
+        const available=["Administrador","Editor"].includes(user()?.role);
+        const tabbar=`<div class="no-scrollbar mb-7 flex gap-2 overflow-x-auto border-b border-white/10 pb-3"><button class="tab-btn ${adminTab==="publicacion"?"active":""}" data-admin-tab="publicacion"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Publicación</button><button class="tab-btn ${adminTab==="seguridad"?"active":""}" data-admin-tab="seguridad"><i class="fa-solid fa-shield-halved mr-2"></i>Seguridad y usuarios</button></div>`;
+        if(!available)return pageWrap(`<div class="mx-auto max-w-xl py-16 text-center"><i class="fa-solid fa-lock text-3xl text-violet-300"></i><h1 class="display mt-5 text-3xl">Acceso restringido</h1><p class="mt-3 text-sm text-slate-400">Tu cuenta no tiene permisos para gestionar el estudio.</p></div>`,"page-admin");
+        return pageWrap(`<div class="mb-8 flex flex-wrap items-start justify-between gap-4"><div><p class="mb-2 text-[11px] font-bold uppercase tracking-[.22em] text-violet-300">Área privada · ${esc(user().role)}</p><h1 class="display text-3xl font-semibold sm:text-4xl">Estudio de administración</h1><p class="mt-2 text-sm text-slate-400">Gestiona tu contenido y la comunidad desde un solo lugar.</p></div><span class="pill"><i class="fa-solid fa-cloud mr-1.5 text-emerald-300"></i>Guardado en este dispositivo</span></div>${tabbar}${adminTab==="publicacion"?publishingTab():securityTab()}`,"page-admin")
+      }
+      function publishingTab(){
+        const counts=Object.fromEntries(Object.keys(typeNames).map(t=>[t,state.items.filter(x=>x.type===t).length]));
+        return `<div class="mb-7 grid grid-cols-2 gap-3 sm:grid-cols-4">${Object.entries(typeNames).map(([t,n])=>`<div class="card rounded-xl p-4"><span class="text-xs text-slate-400">${n}</span><b class="mt-1 block text-2xl">${counts[t]}</b></div>`).join("")}</div><div class="grid gap-6 lg:grid-cols-[280px_1fr]"><aside class="card h-fit rounded-2xl p-4"><p class="mb-3 px-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Añadir contenido</p>${Object.entries(typeNames).map(([t,n])=>`<button class="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm ${selectedType===t?"bg-violet-400/10 text-violet-200":"text-slate-400 hover:bg-white/5"}" data-content-type="${t}"><i class="fa-solid ${({video:"fa-circle-play",image:"fa-image",download:"fa-box-archive",comic:"fa-book-open"})[t]} w-5"></i>${n}<i class="fa-solid fa-plus ml-auto text-xs"></i></button>`).join("")}</aside><section class="card rounded-2xl p-5 sm:p-7"><div class="mb-6"><h2 class="text-xl font-semibold">Publicar ${typeNames[selectedType].toLowerCase()}</h2><p class="mt-1 text-xs text-slate-400">Los campos marcados son necesarios para completar la publicación.</p></div>${contentForm()}</section></div><section class="mt-8">${inventory()}</section>`
+      }
+      function contentForm(){
+        const common=`<div><label class="field-label" for="item-title">Título *</label><input class="field" id="item-title" name="title" required maxlength="120" placeholder="Escribe un título"></div>
+          <div><label class="field-label" for="item-category">Categoría</label><input class="field" id="item-category" name="category" maxlength="60" placeholder="Ej. Naturaleza, Tutoriales"></div>
+          <div><label class="field-label" for="item-orientation">Orientación recomendada *</label><select class="field" id="item-orientation" name="orientation" required><option value="" disabled selected>Selecciona una orientación</option><option value="vertical">Vertical · 9:16</option><option value="horizontal">Horizontal · 16:9</option></select></div>
+          <div><label class="field-label" for="item-visibility">Quién puede verlo *</label><select class="field" id="item-visibility" name="visibility"><option value="public">🌐 Público (todos)</option><option value="registered">🔐 Solo usuarios registrados</option><option value="admin">🛡️ Solo administradores</option></select></div>`;
+        let extra="";
+        if(selectedType==="video")extra=`<div class="sm:col-span-2"><label class="field-label" for="item-source">URL del vídeo o código iframe *</label><textarea class="field min-h-[85px]" id="item-source" name="source" required placeholder="Enlace MP4/WebM, YouTube, Vimeo o código iframe"></textarea><p class="mt-1 text-[11px] text-slate-500">Se acepta un enlace seguro o la etiqueta iframe; no se ejecuta código HTML externo.</p></div><div><label class="field-label" for="item-poster">URL de imagen de portada</label><input class="field" id="item-poster" name="poster" type="url" placeholder="https://..."></div><div><label class="field-label" for="item-duration">Duración</label><input class="field" id="item-duration" name="duration" placeholder="02:34"></div><label class="flex items-center gap-2 text-sm text-slate-300 sm:col-span-2"><input type="checkbox" name="featured" class="accent-violet-400"> Incluir en el acordeón de Inicio</label>`;
+        if(selectedType==="image")extra=`<div class="sm:col-span-2"><label class="field-label" for="item-source">URL de imagen *</label><input class="field" id="item-source" name="source" type="url" required placeholder="https://..."></div><div class="sm:col-span-2"><label class="field-label" for="item-description">Descripción</label><textarea class="field min-h-[76px]" id="item-description" name="description" placeholder="Cuéntanos algo sobre esta imagen"></textarea></div>`;
+        if(selectedType==="download")extra=`<div><label class="field-label" for="item-filetype">Tipo de archivo *</label><select class="field" id="item-filetype" name="fileType"><option>MP4</option><option>PDF</option><option>ZIP</option><option>WEBM</option><option>Otro</option></select></div><div><label class="field-label" for="item-size">Tamaño del archivo</label><input class="field" id="item-size" name="size" placeholder="12.5 MB"></div><div><label class="field-label" for="item-version">Versión</label><input class="field" id="item-version" name="version" placeholder="1.0.0"></div><div class="sm:col-span-2"><label class="field-label" for="item-url">Enlace directo de descarga *</label><input class="field" id="item-url" name="url" type="url" required placeholder="https://..."></div><div class="sm:col-span-2"><label class="field-label" for="item-description">Descripción</label><textarea class="field min-h-[76px]" id="item-description" name="description" placeholder="Describe el archivo y su contenido"></textarea></div>`;
+        if(selectedType==="comic")extra=`<div><label class="field-label" for="item-chapter">Número o nombre del capítulo *</label><input class="field" id="item-chapter" name="chapter" required placeholder="Capítulo 01"></div><div><label class="field-label" for="item-cover">URL de portada *</label><input class="field" id="item-cover" name="cover" type="url" required placeholder="https://..."></div><div class="sm:col-span-2"><label class="field-label" for="item-pages">URLs de páginas, separadas por comas *</label><textarea class="field min-h-[100px]" id="item-pages" name="pages" required placeholder="https://.../pagina-1.jpg, https://.../pagina-2.jpg"></textarea></div><div class="sm:col-span-2"><label class="field-label" for="item-description">Sinopsis</label><textarea class="field min-h-[76px]" id="item-description" name="description" placeholder="¿De qué trata este capítulo?"></textarea></div>`;
+        return `<form id="publish-form" class="grid gap-4 sm:grid-cols-2">${common}${extra}<div class="mt-2 sm:col-span-2"><button class="btn-primary" type="submit"><i class="fa-solid fa-paper-plane mr-2"></i>Publicar ${typeNames[selectedType].toLowerCase()}</button></div></form>`
+      }
+      function inventory(){
+        const items=state.items.slice().reverse();
+        const groups=items.reduce((result,item)=>{const category=String(item.category||"General").trim()||"General";(result[category]=result[category]||[]).push(item);return result},{});
+        return `<div class="mb-4 flex items-end justify-between"><div><p class="text-[11px] font-bold uppercase tracking-[.2em] text-violet-300">Tu biblioteca</p><h2 class="display mt-1 text-2xl font-semibold">Inventario de contenido</h2></div><span class="pill">${items.length} elementos</span></div>${items.length?Object.entries(groups).map(([category,group])=>`<section class="mb-4 overflow-hidden rounded-2xl border border-white/10"><h3 class="bg-white/[.04] px-4 py-3 text-xs font-bold uppercase tracking-wider text-slate-300">${esc(category)} <span class="ml-1 font-normal text-slate-500">· ${group.length}</span></h3>${group.map(item=>`<div class="flex flex-wrap items-center gap-3 border-t border-white/10 bg-white/[.02] px-4 py-3"><span class="flex h-9 w-9 items-center justify-center rounded-lg bg-white/5 text-violet-200"><i class="fa-solid ${({video:"fa-circle-play",image:"fa-image",download:"fa-box-archive",comic:"fa-book-open"})[item.type]}"></i></span><span class="min-w-[130px] flex-1"><b class="block text-sm">${esc(item.title)}</b><span class="text-[11px] text-slate-500">${typeNames[item.type]} · ${visibilityLabel(item.visibility)} · ${format(item)==="vertical"?"9:16":"16:9"}</span></span><button class="delete-item btn-secondary px-3 py-2 text-xs text-rose-200" data-delete-item="${esc(item.id)}" aria-label="Eliminar ${esc(item.title)}"><i class="fa-regular fa-trash-can"></i></button></div>`).join("")}</section>`).join(""):`<div class="rounded-2xl border border-white/10 p-8 text-center text-sm text-slate-500">Todavía no hay contenido publicado.</div>`}`
+      }
+      function securityTab(){
+        if(!isAdmin())return `<div class="card rounded-2xl p-7 text-center"><i class="fa-solid fa-lock text-2xl text-violet-300"></i><h2 class="mt-3 font-semibold">Sección exclusiva para administradores</h2><p class="mt-2 text-sm text-slate-400">Solo una cuenta de administrador puede gestionar usuarios y credenciales.</p></div>${inventory()}`;
+        return `<div class="grid gap-6 lg:grid-cols-2"><section class="card rounded-2xl p-5 sm:p-6"><p class="text-xs font-bold uppercase tracking-wider text-violet-300">Tu cuenta</p><h2 class="mt-2 text-xl font-semibold">Actualizar perfil</h2><form id="profile-form" class="mt-5 space-y-4"><div><label class="field-label" for="current-pin">PIN actual (6 dígitos)</label><input class="field" id="current-pin" name="currentPin" type="password" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required placeholder="••••••"></div><div><label class="field-label" for="new-username">Nombre de usuario</label><input class="field" id="new-username" name="username" required maxlength="30" value="${esc(user().username)}"></div><div><label class="field-label" for="new-pin">Nuevo PIN de 6 dígitos (opcional)</label><input class="field" id="new-pin" name="pin" type="password" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="Dejar en blanco para conservar"></div><button class="btn-primary" type="submit">Guardar cambios</button></form>        <div class="mt-5 border-t border-white/10 pt-4"><button id="reset-credentials" class="btn-secondary text-xs text-rose-200"><i class="fa-solid fa-triangle-exclamation mr-2"></i>Restablecer a admin / 123456</button><p class="mt-2 text-[11px] text-slate-500">Restablece tu nombre y PIN sin eliminar las demás cuentas.</p></div></section>
+          <section class="card rounded-2xl p-5 sm:p-6"><p class="text-xs font-bold uppercase tracking-wider text-violet-300">Equipo</p><h2 class="mt-2 text-xl font-semibold">Registrar usuario</h2><form id="user-form" class="mt-5 space-y-4"><div><label class="field-label" for="user-name">Nombre de usuario *</label><input class="field" id="user-name" name="username" required maxlength="30" placeholder="Ej. lucia"></div><div><label class="field-label" for="user-pin">PIN de 6 dígitos *</label><input class="field" id="user-pin" name="pin" required type="password" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="••••••"></div><div><label class="field-label" for="user-role">Rol *</label><select class="field" id="user-role" name="role"><option>Administrador</option><option>Editor</option><option>Lector VIP</option></select></div><button class="btn-primary" type="submit"><i class="fa-solid fa-user-plus mr-2"></i>Crear cuenta</button></form></section></div>
+          <section class="mt-7"><div class="mb-4 flex items-end justify-between"><div><p class="text-[11px] font-bold uppercase tracking-[.2em] text-violet-300">Accesos privados</p><h2 class="display mt-1 text-2xl font-semibold">Usuarios registrados</h2></div><span class="pill">${state.users.length} cuentas</span></div><div class="overflow-hidden rounded-2xl border border-white/10">${state.users.map(account=>`<div class="flex flex-wrap items-center gap-3 border-b border-white/10 bg-white/[.02] px-4 py-3 last:border-0"><span class="flex h-9 w-9 items-center justify-center rounded-full bg-violet-400/10 text-violet-200"><i class="fa-solid fa-user"></i></span><span class="min-w-[130px] flex-1"><b class="block text-sm">${esc(account.username)} ${account.id===user().id?'<span class="text-[10px] text-emerald-300">(tú)</span>':""}</b><span class="text-[11px] text-slate-500">${esc(account.role)}</span></span>${account.id!==user().id?`<button class="btn-secondary px-3 py-2 text-xs text-rose-200" data-delete-user="${esc(account.id)}" aria-label="Eliminar usuario ${esc(account.username)}"><i class="fa-regular fa-trash-can"></i></button>`:`<span class="pill">Sesión actual</span>`}</div>`).join("")}</div></section>${inventory()}`
+      }
+      function bindPageActions(){
+        $$("[data-page]",$("#page-content")).forEach(b=>b.addEventListener("click",()=>setHash(b.dataset.page)));
+        $$("[data-accordion]").forEach(b=>b.addEventListener("click",()=>{openAccordion=openAccordion===b.dataset.accordion?null:b.dataset.accordion;render()}));
+        $$("[data-play]").forEach(b=>b.addEventListener("click",()=>openVideo(b.dataset.play)));
+        $$("[data-image]").forEach(b=>b.addEventListener("click",()=>openImage(b.dataset.image)));
+        $$("[data-comic]").forEach(b=>b.addEventListener("click",()=>{activeComic=b.dataset.comic;render();window.scrollTo({top:0,behavior:"smooth"})}));
+        $("#back-comics")?.addEventListener("click",()=>{activeComic=null;render()});
+        $$("[data-download]").forEach(link=>link.addEventListener("click",()=>{const key=link.dataset.download;state.downloads=state.downloads||{};state.downloads[key]=Number(state.downloads[key]??state.items.find(x=>x.id===key)?.downloads??0)+1;persist();setTimeout(render,250)}));
+        $$("[data-admin-tab]").forEach(b=>b.addEventListener("click",()=>{adminTab=b.dataset.adminTab;render()}));
+        $$("[data-content-type]").forEach(b=>b.addEventListener("click",()=>{selectedType=b.dataset.contentType;render()}));
+        $$("[data-delete-item]").forEach(b=>b.addEventListener("click",()=>deleteItem(b.dataset.deleteItem)));
+        $$("[data-delete-user]").forEach(b=>b.addEventListener("click",()=>deleteUser(b.dataset.deleteUser)));
+        $("#publish-form")?.addEventListener("submit",publishItem);
+        $("#profile-form")?.addEventListener("submit",updateProfile);
+        $("#user-form")?.addEventListener("submit",createUser);
+        $("#reset-credentials")?.addEventListener("click",resetCredentials)
+      }
+      function openVideo(itemId){
+        const item=state.items.find(x=>x.id===itemId&&canSee(x));if(!item)return;
+        $("#modal-root").innerHTML=`<div class="modal-backdrop fixed inset-0 z-[80] flex items-center justify-center p-3 sm:p-8" data-close-modal><section class="relative flex max-h-[95vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-white/15 bg-[#10131d] shadow-2xl" role="dialog" aria-modal="true" aria-label="${esc(item.title)}"><div class="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-3"><div><h2 class="font-semibold">${esc(item.title)}</h2><p class="text-xs text-slate-500">${esc(item.category||"Vídeo")} · ${format(item)==="vertical"?"Vertical 9:16":"Horizontal 16:9"}</p></div><button class="close-modal btn-secondary h-9 w-9 p-0" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button></div><div class="media-frame mx-auto max-h-[calc(95vh-70px)] ${format(item)==="vertical"?"aspect-[9/16] h-[calc(95vh-70px)] max-w-[min(95vw,420px)]":"aspect-video w-full"}">${player(item,true)}</div></section></div>`;
+        bindModal()
+      }
+      function openImage(itemId){
+        const item=state.items.find(x=>x.id===itemId&&canSee(x));if(!item)return;
+        const images=visibleItems("image"),index=images.findIndex(i=>i.id===itemId);
+        $("#modal-root").innerHTML=`<div class="modal-backdrop fixed inset-0 z-[80] flex items-center justify-center p-3 sm:p-8" data-close-modal><section class="relative flex h-full max-h-[92vh] w-full max-w-6xl flex-col items-center justify-center" role="dialog" aria-modal="true" aria-label="Visor de imágenes"><div class="absolute right-0 top-0 z-10 flex items-center gap-2"><span class="pill">${index+1} / ${images.length}</span><button class="close-modal btn-secondary h-10 w-10 p-0"><i class="fa-solid fa-xmark"></i></button></div><img src="${esc(item.source)}" alt="${esc(item.title)}" class="max-h-[78vh] max-w-full rounded-xl object-contain shadow-2xl"><div class="mt-4 text-center"><h2 class="font-semibold">${esc(item.title)}</h2><p class="mt-1 text-sm text-slate-400">${esc(item.category||"")}</p></div>${images.length>1?`<div class="mt-4 flex gap-2"><button class="btn-secondary" data-image-nav="${(index-1+images.length)%images.length}"><i class="fa-solid fa-arrow-left mr-2"></i>Anterior</button><button class="btn-secondary" data-image-nav="${(index+1)%images.length}">Siguiente<i class="fa-solid fa-arrow-right ml-2"></i></button></div>`:""}</section></div>`;
+        bindModal();$$("[data-image-nav]").forEach(b=>b.addEventListener("click",()=>{const next=images[Number(b.dataset.imageNav)];openImage(next.id)}))
+      }
+      function bindModal(){
+        $$(".close-modal").forEach(b=>b.addEventListener("click",()=>$("#modal-root").innerHTML=""));
+        $("#modal-root").addEventListener("click",e=>{if(e.target.hasAttribute("data-close-modal"))$("#modal-root").innerHTML=""},{once:true});
+        document.addEventListener("keydown",function escape(e){if(e.key==="Escape"&&$("#modal-root").innerHTML){$("#modal-root").innerHTML="";document.removeEventListener("keydown",escape)}})
+      }
+      function publishItem(event){
+        event.preventDefault();const data=Object.fromEntries(new FormData(event.currentTarget));const record={id:id(),type:selectedType,title:String(data.title||"").trim(),category:String(data.category||"General").trim(),orientation:data.orientation,visibility:data.visibility||"public",description:String(data.description||"").trim()};
+        if(!record.title){toast("Escribe un título para publicar.","error");return}
+        if(selectedType==="video"){
+          if(!mediaUrl(data.source)){toast("Introduce una URL http(s) válida o un código iframe con origen seguro.","error");return}
+          record.source=String(data.source).trim();record.poster=safeUrl(data.poster)||"";record.duration=String(data.duration||"").trim();record.featured=data.featured==="on";
+        } else if(selectedType==="image"){
+          record.source=safeUrl(data.source);if(!record.source){toast("Introduce una dirección válida para la imagen.","error");return}
+        } else if(selectedType==="download"){
+          record.url=safeUrl(data.url);if(!record.url){toast("Introduce una dirección de descarga válida.","error");return}
+          record.fileType=data.fileType;record.size=String(data.size||"").trim();record.version=String(data.version||"1.0").trim();record.downloads=0
+        } else {
+          record.chapter=String(data.chapter||"").trim();record.cover=safeUrl(data.cover);record.pages=String(data.pages||"").split(",").map(x=>safeUrl(x.trim())).filter(Boolean);
+          if(!record.cover||!record.pages.length){toast("Añade una portada y al menos una página con URL válida.","error");return}
         }
-
-        function renderAll() {
-            renderHomeAccordion();
-            renderHomeImages();
-            renderVideosPage();
-            renderImagesPage();
-            renderDownloadsPage();
-            renderComicsPage();
-            renderAdminInventory();
-            renderAdminUsers();
-            updateAdminStats();
-            updateAccessBadgeUI();
-        }
-
-        function navigateTo(pageId) {
-            if (pageId === 'admin' && accessMode === 'public') {
-                openAccessModal('private');
-                showToast('Inicia sesión privada para acceder al panel de administración.', 'fa-lock text-amber-400');
-                return;
-            }
-
-            document.querySelectorAll('.page-content').forEach(page => page.classList.add('hidden'));
-            const targetPage = document.getElementById(`page-${pageId}`);
-            if (targetPage) targetPage.classList.remove('hidden');
-
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('text-white', 'bg-brand-600/30', 'border', 'border-brand-500/30');
-                btn.classList.add('text-slate-300');
-            });
-
-            const activeNav = document.getElementById(`nav-${pageId}`);
-            if (activeNav) {
-                activeNav.classList.remove('text-slate-300');
-                activeNav.classList.add('text-white');
-            }
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function switchAdminTab(tabName) {
-            document.querySelectorAll('.admin-form-panel').forEach(panel => panel.classList.add('hidden'));
-            document.querySelectorAll('.admin-tab-btn').forEach(btn => {
-                btn.classList.remove('bg-brand-600', 'text-white', 'border-b-2', 'border-brand-accent');
-                btn.classList.add('text-slate-400');
-            });
-
-            const activePanel = document.getElementById(`admin-form-${tabName}`);
-            if (activePanel) activePanel.classList.remove('hidden');
-
-            const activeTabBtn = document.getElementById(`admin-tab-${tabName}`);
-            if (activeTabBtn) {
-                activeTabBtn.classList.remove('text-slate-400');
-                activeTabBtn.classList.add('bg-brand-600', 'text-white', 'border-b-2', 'border-brand-accent');
-            }
-
-            if (tabName === 'users') {
-                const usernameField = document.getElementById('input-edit-username');
-                if (usernameField && authenticatedUser) {
-                    usernameField.value = authenticatedUser;
-                }
-            }
-        }
-
-        function openAccessModal(defaultTab = 'public') {
-            const modal = document.getElementById('access-modal');
-            if (modal) {
-                modal.classList.remove('hidden');
-                switchAccessTab(defaultTab);
-            }
-        }
-
-        function closeAccessModal() {
-            const modal = document.getElementById('access-modal');
-            if (modal) modal.classList.add('hidden');
-        }
-
-        function switchAccessTab(mode) {
-            const btnPublic = document.getElementById('tab-btn-public');
-            const btnPrivate = document.getElementById('tab-btn-private');
-            const formPublic = document.getElementById('access-form-public');
-            const formPrivate = document.getElementById('access-form-private');
-
-            if (mode === 'public') {
-                btnPublic.className = 'py-2 rounded-lg text-xs font-bold transition-all bg-brand-600 text-white shadow';
-                btnPrivate.className = 'py-2 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white';
-                formPublic.classList.remove('hidden');
-                formPrivate.classList.add('hidden');
-            } else {
-                btnPrivate.className = 'py-2 rounded-lg text-xs font-bold transition-all bg-brand-600 text-white shadow';
-                btnPublic.className = 'py-2 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white';
-                formPrivate.classList.remove('hidden');
-                formPublic.classList.add('hidden');
-            }
-        }
-
-        function loginAsPublic() {
-            accessMode = 'public';
-            authenticatedUser = null;
-            saveDataToStorage();
-            updateAccessBadgeUI();
-            closeAccessModal();
-            renderAll();
-            navigateTo('home');
-            showToast('Navegación en Modo Público activada', 'fa-globe text-cyan-400');
-        }
-
-        function loginAsPrivate() {
-            const usernameInput = (document.getElementById('login-username').value || '').trim();
-            const pinInput = (document.getElementById('login-pin').value || '').trim();
-            const errorBox = document.getElementById('login-error');
-
-            const userObj = appData.users.find(u => 
-                u.username.toLowerCase() === usernameInput.toLowerCase() && 
-                String(u.pin).trim() === String(pinInput).trim()
-            );
-
-            if (userObj) {
-                if (errorBox) errorBox.classList.add('hidden');
-                accessMode = 'private';
-                authenticatedUser = userObj.username;
-                saveDataToStorage();
-                updateAccessBadgeUI();
-                closeAccessModal();
-                renderAll();
-                showToast(`Sesión privada iniciada como ${userObj.username}`, 'fa-user-check text-emerald-400');
-            } else {
-                if (errorBox) errorBox.classList.remove('hidden');
-            }
-        }
-
-        function updateAccessBadgeUI() {
-            const icon = document.getElementById('access-badge-icon');
-            const text = document.getElementById('access-badge-text');
-
-            if (accessMode === 'private' && authenticatedUser) {
-                if (icon) icon.className = 'fa-solid fa-user-shield text-emerald-400 text-sm';
-                if (text) text.textContent = authenticatedUser;
-            } else {
-                if (icon) icon.className = 'fa-solid fa-unlock text-cyan-400 text-sm';
-                if (text) text.textContent = 'Público';
-            }
-        }
-
-        function userCanView(item) {
-            const itemAccess = item.access || 'public';
-            if (itemAccess === 'public') return true;
-            if (accessMode === 'public') return false;
-            if (itemAccess === 'registered') return true;
-            if (itemAccess === 'admin') {
-                const userObj = appData.users.find(u => u.username.toLowerCase() === (authenticatedUser || '').toLowerCase());
-                return userObj && userObj.role === 'Administrador';
-            }
-            return true;
-        }
-
-        function toggleGlobalOrientation() {
-            globalOrientation = globalOrientation === 'vertical' ? 'horizontal' : 'vertical';
-            const icon = document.getElementById('orientation-icon');
-            const label = document.getElementById('orientation-label');
-
-            if (globalOrientation === 'horizontal') {
-                if (icon) icon.className = 'fa-solid fa-desktop text-indigo-400 text-sm';
-                if (label) label.textContent = 'Modo 16:9';
-                showToast('Orientación global enviada a Horizontal (16:9)', 'fa-desktop text-indigo-400');
-            } else {
-                if (icon) icon.className = 'fa-solid fa-mobile-screen text-indigo-400 text-sm';
-                if (label) label.textContent = 'Modo 9:16';
-                showToast('Orientación global enviada a Vertical (9:16)', 'fa-mobile-screen text-indigo-400');
-            }
-            renderAll();
-        }
-
-        function getItemAspectClass(item) {
-            const orientation = (item && item.orientation) ? item.orientation : globalOrientation;
-            return orientation === 'horizontal' ? 'aspect-[16/9] w-full' : 'aspect-[9/16] w-full';
-        }
-
-        function getItemGridSpanClass(item) {
-            const orientation = (item && item.orientation) ? item.orientation : globalOrientation;
-            return orientation === 'horizontal' ? 'col-span-1 sm:col-span-2' : 'col-span-1';
-        }
-
-        function getAccessBadgeHtml(access) {
-            if (access === 'registered') return '<span class="px-2 py-0.5 text-[10px] bg-amber-500/20 text-amber-300 rounded border border-amber-500/30">Privado</span>';
-            if (access === 'admin') return '<span class="px-2 py-0.5 text-[10px] bg-red-500/20 text-red-300 rounded border border-red-500/30">Solo Admin</span>';
-            return '<span class="px-2 py-0.5 text-[10px] bg-cyan-500/20 text-cyan-300 rounded border border-cyan-500/30">Público</span>';
-        }
-
-        function renderVideoElement(video) {
-            const url = (video.url || '').trim();
-            if (!url) {
-                return `<div class="w-full h-full flex flex-col items-center justify-center bg-slate-900 text-slate-500 p-4 text-center"><i class="fa-solid fa-video-slash text-3xl mb-2"></i><span class="text-xs">Sin URL de vídeo</span></div>`;
-            }
-
-            if (url.startsWith('<iframe')) {
-                return url.replace('<iframe', '<iframe class="w-full h-full border-0 rounded-xl"');
-            }
-
-            if (url.includes('youtube.com') || url.includes('youtu.be') || url.includes('vimeo.com')) {
-                let embedUrl = url;
-                if (url.includes('watch?v=')) {
-                    embedUrl = url.replace('watch?v=', 'embed/');
-                } else if (url.includes('youtu.be/')) {
-                    embedUrl = url.replace('youtu.be/', 'www.youtube.com/embed/');
-                }
-                return `<iframe src="${embedUrl}" class="w-full h-full border-0 rounded-xl" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-            }
-
-            if (url.includes('cloudinary.com') && !url.endsWith('.mp4') && !url.endsWith('.webm')) {
-                return `<iframe src="${url}" class="w-full h-full border-0 rounded-xl" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
-            }
-
-            return `
-                <video class="w-full h-full object-cover rounded-xl" controls playsinline preload="metadata" poster="${video.poster || ''}" ${isMuted ? 'muted' : ''} onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'w-full h-full flex flex-col items-center justify-center bg-slate-900 text-slate-400 p-4 text-center border border-slate-800 rounded-xl\'><i class=\'fa-solid fa-triangle-exclamation text-amber-400 text-2xl mb-2\'></i><p class=\'text-xs font-semibold\'>Vídeo en proceso o no disponible</p><p class=\'text-[10px] text-slate-500 mt-1\'>Verifica la URL cargada</p></div>'">
-                    <source src="${url}" type="video/mp4">
-                    <source src="${url}" type="video/webm">
-                    Tu navegador no soporta el reproductor de vídeo.
-                </video>
-            `;
-        }
-
-        function renderHomeAccordion() {
-            const container = document.getElementById('home-accordion-container');
-            if (!container) return;
-
-            const visibleVideos = appData.videos.filter(v => v.featuredAccordion !== false && userCanView(v));
-            const listToRender = visibleVideos.length > 0 ? visibleVideos : appData.videos.filter(userCanView).slice(0, 5);
-
-            if (listToRender.length === 0) {
-                container.innerHTML = '<p class="text-slate-500 text-sm italic p-4 bg-slate-900 rounded-xl border border-slate-800">No hay vídeos con permiso suficiente para visualizar.</p>';
-                return;
-            }
-
-            container.innerHTML = listToRender.map((video, index) => {
-                const accId = `acc-${video.id}`;
-                const aspectClass = getItemAspectClass(video);
-                const mediaHtml = renderVideoElement(video);
-
-                return `
-                    <div class="rounded-2xl border border-slate-800 bg-slate-900/60 overflow-hidden shadow-lg transition-all">
-                        <button onclick="toggleAccordion('${accId}')" class="w-full px-6 py-4 flex items-center justify-between text-left bg-slate-900/80 hover:bg-slate-800/80 transition-colors">
-                            <div class="flex items-center space-x-4">
-                                <span class="w-8 h-8 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center font-bold text-sm">0${index + 1}</span>
-                                <div>
-                                    <div class="flex items-center gap-2">
-                                        <h3 class="font-semibold text-white text-base sm:text-lg">${video.title}</h3>
-                                        ${getAccessBadgeHtml(video.access)}
-                                    </div>
-                                    <p class="text-slate-400 text-xs sm:text-sm">Categoría: ${video.category} • Duración: ${video.duration || '0:45'} • Formato: ${video.orientation || 'vertical'}</p>
-                                </div>
-                            </div>
-                            <i id="acc-icon-${accId}" class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300"></i>
-                        </button>
-                        <div id="${accId}" class="accordion-content">
-                            <div class="p-6 bg-slate-950/60 flex flex-col md:flex-row gap-6 items-center">
-                                <div class="w-full ${video.orientation === 'horizontal' ? 'max-w-[480px]' : 'max-w-[280px]'} ${aspectClass} bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-2xl relative flex-shrink-0">
-                                    ${mediaHtml}
-                                </div>
-                                <div class="space-y-4 flex-1">
-                                    <div class="inline-block px-3 py-1 rounded-md bg-red-500/10 text-red-400 text-xs font-medium border border-red-500/20">${video.category}</div>
-                                    <h4 class="text-xl font-bold text-white">${video.title}</h4>
-                                    <p class="text-slate-300 text-sm leading-relaxed">Vídeo en pestaña desplegable (${video.orientation === 'horizontal' ? 'Horizontal 16:9' : 'Vertical 9:16'}).</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function renderHomeImages() {
-            const container = document.getElementById('home-images-container');
-            if (!container) return;
-
-            const displayList = appData.images.filter(userCanView).slice(0, 5);
-            if (displayList.length === 0) {
-                container.innerHTML = '<p class="col-span-full text-slate-500 text-sm italic p-4 bg-slate-900 rounded-xl border border-slate-800">Sin imágenes registradas con permiso de visibilidad.</p>';
-                return;
-            }
-
-            container.innerHTML = displayList.map((img, i) => `
-                <div onclick="openImageModal('${img.url}', '${img.title}')" class="group relative ${getItemGridSpanClass(img)} ${getItemAspectClass(img)} rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 shadow-xl cursor-pointer hover:border-brand-500/50 transition-all duration-300 hover:-translate-y-1">
-                    <img src="${img.url}" alt="${img.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/600x1066/0f172a/6366f1?text=Imagen+${i+1}'">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs text-brand-accent font-semibold">${img.orientation === 'horizontal' ? '💻 16:9 Landscape' : '📱 9:16 Portrait'}</span>
-                            ${getAccessBadgeHtml(img.access)}
-                        </div>
-                        <span class="text-sm font-bold text-white truncate">${img.title}</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function renderVideosPage() {
-            const container = document.getElementById('videos-grid-container');
-            if (!container) return;
-
-            const visibleVideos = appData.videos.filter(userCanView);
-            container.innerHTML = visibleVideos.map(video => {
-                const aspectClass = getItemAspectClass(video);
-                const spanClass = getItemGridSpanClass(video);
-                const mediaHtml = renderVideoElement(video);
-
-                return `
-                    <div class="${spanClass} bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-xl group hover:border-red-500/40 transition-all flex flex-col">
-                        <div class="relative ${aspectClass} bg-slate-950 overflow-hidden">
-                            ${mediaHtml}
-                        </div>
-                        <div class="p-4 space-y-2 flex-1 flex flex-col justify-between">
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs font-semibold text-red-400 bg-red-500/10 px-2 py-0.5 rounded border border-red-500/20">${video.category} • ${video.orientation === 'horizontal' ? '16:9' : '9:16'}</span>
-                                ${getAccessBadgeHtml(video.access)}
-                            </div>
-                            <h3 class="font-bold text-white text-base truncate">${video.title}</h3>
-                        </div>
-                    </div>
-                `;
-            }).join('') || '<p class="text-slate-500 italic col-span-full">No hay vídeos autorizados para esta vista.</p>';
-        }
-
-        function renderImagesPage() {
-            const container = document.getElementById('images-grid-container');
-            if (!container) return;
-
-            const visibleImages = appData.images.filter(userCanView);
-            container.innerHTML = visibleImages.map(img => `
-                <div onclick="openImageModal('${img.url}', '${img.title}')" class="${getItemGridSpanClass(img)} ${getItemAspectClass(img)} bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 cursor-pointer group hover:border-emerald-500/50 transition-all shadow-xl relative">
-                    <img src="${img.url}" alt="${img.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.src='https://placehold.co/600x1066/0f172a/6366f1?text=Imagen+HD'">
-                    <div class="absolute top-2 left-2 bg-slate-950/80 px-2 py-0.5 rounded text-[10px] text-slate-300 font-semibold border border-slate-800">${img.orientation === 'horizontal' ? '16:9' : '9:16'}</div>
-                    <div class="absolute top-2 right-2">${getAccessBadgeHtml(img.access)}</div>
-                </div>
-            `).join('') || '<p class="text-slate-500 italic col-span-full">No hay imágenes disponibles para tu rol.</p>';
-        }
-
-        function renderDownloadsPage() {
-            const container = document.getElementById('downloads-grid-container');
-            if (!container) return;
-
-            const visibleDownloads = appData.downloads.filter(userCanView);
-            container.innerHTML = visibleDownloads.map(item => `
-                <div class="bg-slate-900 rounded-2xl p-6 border border-slate-800 shadow-xl flex flex-col justify-between hover:border-amber-500/40 transition-all">
-                    <div class="space-y-4">
-                        <div class="flex items-center justify-between">
-                            <span class="p-3 bg-amber-500/10 text-amber-400 rounded-xl text-xl"><i class="fa-solid fa-file font-bold"></i></span>
-                            <div class="flex items-center gap-2">
-                                ${getAccessBadgeHtml(item.access)}
-                                <span class="text-xs font-mono text-slate-400 bg-slate-800 px-2.5 py-1 rounded-full">${item.version} • ${item.size}</span>
-                            </div>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-bold text-white">${item.title}</h3>
-                            <p class="text-slate-400 text-sm mt-1">${item.desc}</p>
-                        </div>
-                    </div>
-                    <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
-                        <span class="text-xs text-slate-500"><i class="fa-solid fa-download"></i> ${item.downloads || 0} descargas</span>
-                        <button onclick="downloadResource('${item.id}', '${(item.url || '').replace(/'/g, "\\'")}', '${item.title.replace(/'/g, "\\'")}')" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition-all flex items-center gap-2">
-                            <i class="fa-solid fa-download"></i> Descargar ${item.type}
-                        </button>
-                    </div>
-                </div>
-            `).join('') || '<p class="text-slate-500 italic col-span-full">No hay recursos de descarga accesibles.</p>';
-        }
-
-        function renderComicsPage() {
-            const container = document.getElementById('comics-shelf-container');
-            if (!container) return;
-
-            const visibleComics = appData.comics.filter(userCanView);
-            container.innerHTML = visibleComics.map(comic => `
-                <div class="${getItemGridSpanClass(comic)} bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-xl flex flex-col hover:border-purple-500/40 transition-all">
-                    <div class="${getItemAspectClass(comic)} bg-slate-950 relative overflow-hidden">
-                        <img src="${comic.cover}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/600x1066/0f172a/a855f7?text=Comic+Cover'">
-                        <div class="absolute top-2 right-2">${getAccessBadgeHtml(comic.access)}</div>
-                    </div>
-                    <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
-                        <div>
-                            <h3 class="text-xl font-bold text-white">${comic.title}</h3>
-                            <p class="text-slate-400 text-xs mt-1">${comic.chapter} • ${comic.genre} • ${comic.orientation === 'horizontal' ? '16:9' : '9:16'}</p>
-                            <p class="text-slate-300 text-sm mt-3 line-clamp-3">${comic.desc}</p>
-                        </div>
-                        <button onclick="openCustomComicReader('${comic.id}')" class="w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-sm shadow-lg shadow-purple-600/30 transition-all flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-book-open"></i> Leer Ahora
-                        </button>
-                    </div>
-                </div>
-            `).join('') || '<p class="text-slate-500 italic col-span-full">No hay cómics disponibles para tu tipo de cuenta.</p>';
-        }
-
-        function handleAdminAddVideo(e) {
-            e.preventDefault();
-            const title = document.getElementById('input-video-title').value;
-            const category = document.getElementById('input-video-category').value;
-            const url = document.getElementById('input-video-url').value;
-            const poster = document.getElementById('input-video-poster').value;
-            const duration = document.getElementById('input-video-duration').value || '0:45';
-            const featuredAccordion = document.getElementById('input-video-featured').checked;
-            const orientation = document.getElementById('input-video-orientation').value;
-            const access = document.getElementById('input-video-access').value;
-
-            const newVideo = {
-                id: 'v_' + Date.now(),
-                title, category, url, poster, duration, featuredAccordion, orientation, access
-            };
-
-            appData.videos.unshift(newVideo);
-            saveDataToStorage();
-            renderAll();
-            e.target.reset();
-            showToast(`Vídeo "${title}" publicado`, 'fa-circle-check text-emerald-400');
-        }
-
-        function handleAdminAddImage(e) {
-            e.preventDefault();
-            const title = document.getElementById('input-image-title').value;
-            const url = document.getElementById('input-image-url').value;
-            const orientation = document.getElementById('input-image-orientation').value;
-            const access = document.getElementById('input-image-access').value;
-
-            appData.images.unshift({ id: 'img_' + Date.now(), title, url, orientation, access });
-            saveDataToStorage();
-            renderAll();
-            e.target.reset();
-            showToast(`Imagen "${title}" añadida`, 'fa-circle-check text-emerald-400');
-        }
-
-        function handleAdminAddDownload(e) {
-            e.preventDefault();
-            const title = document.getElementById('input-download-title').value;
-            const type = document.getElementById('input-download-type').value;
-            const size = document.getElementById('input-download-size').value;
-            const version = document.getElementById('input-download-version').value;
-            const url = document.getElementById('input-download-url').value;
-            const desc = document.getElementById('input-download-desc').value;
-            const orientation = document.getElementById('input-download-orientation').value;
-            const access = document.getElementById('input-download-access').value;
-
-            appData.downloads.unshift({ id: 'd_' + Date.now(), title, type, size, version, url, desc, downloads: 0, orientation, access });
-            saveDataToStorage();
-            renderAll();
-            e.target.reset();
-            showToast(`Recurso "${title}" publicado`, 'fa-circle-check text-emerald-400');
-        }
-
-        function handleAdminAddComic(e) {
-            e.preventDefault();
-            const title = document.getElementById('input-comic-title').value;
-            const chapter = document.getElementById('input-comic-chapter').value;
-            const genre = document.getElementById('input-comic-genre').value;
-            const cover = document.getElementById('input-comic-cover').value;
-            const desc = document.getElementById('input-comic-desc').value;
-            const pagesRaw = document.getElementById('input-comic-pages').value;
-            const orientation = document.getElementById('input-comic-orientation').value;
-            const access = document.getElementById('input-comic-access').value;
-
-            const pages = pagesRaw.split(/[\n,]+/).map(p => p.trim()).filter(p => p.length > 0);
-
-            appData.comics.unshift({ id: 'c_' + Date.now(), title, chapter, genre, cover, desc, pages, orientation, access });
-            saveDataToStorage();
-            renderAll();
-            e.target.reset();
-            showToast(`Capítulo "${title}" publicado`, 'fa-circle-check text-emerald-400');
-        }
-
-        function downloadResource(id, url, title) {
-            const item = appData.downloads.find(d => d.id === id);
-            if (item) {
-                item.downloads = (item.downloads || 0) + 1;
-                saveDataToStorage();
-                renderDownloadsPage();
-            }
-
-            showToast(`Iniciando descarga: ${title}...`, 'fa-circle-notch fa-spin text-amber-400');
-
-            if (url && url !== '#') {
-                setTimeout(() => {
-                    window.open(url, '_blank');
-                    showToast(`Enlace abierto para ${title}`, 'fa-circle-check text-emerald-400');
-                }, 800);
-            }
-        }
-
-        function deleteContentItem(category, id) {
-            if (appData[category]) {
-                appData[category] = appData[category].filter(item => item.id !== id);
-                saveDataToStorage();
-                renderAll();
-                showToast('Contenido eliminado correctamente', 'fa-trash-can text-amber-400');
-            }
-        }
-
-        function renderAdminInventory() {
-            const container = document.getElementById('admin-inventory-container');
-            if (!container) return;
-
-            let inventoryHtml = '';
-
-            appData.videos.forEach(item => {
-                inventoryHtml += `
-                    <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between gap-4">
-                        <div class="flex items-center space-x-3 overflow-hidden">
-                            <span class="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs font-bold">VÍDEO</span>
-                            <span class="text-sm font-semibold text-white truncate">${item.title}</span>
-                        </div>
-                        <button onclick="deleteContentItem('videos', '${item.id}')" class="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/40 text-red-300 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 flex-shrink-0">
-                            <i class="fa-solid fa-trash"></i> Eliminar
-                        </button>
-                    </div>
-                `;
-            });
-
-            appData.images.forEach(item => {
-                inventoryHtml += `
-                    <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between gap-4">
-                        <div class="flex items-center space-x-3 overflow-hidden">
-                            <span class="px-2 py-1 bg-emerald-500/20 text-emerald-400 rounded text-xs font-bold">IMAGEN</span>
-                            <span class="text-sm font-semibold text-white truncate">${item.title}</span>
-                        </div>
-                        <button onclick="deleteContentItem('images', '${item.id}')" class="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/40 text-red-300 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 flex-shrink-0">
-                            <i class="fa-solid fa-trash"></i> Eliminar
-                        </button>
-                    </div>
-                `;
-            });
-
-            appData.downloads.forEach(item => {
-                inventoryHtml += `
-                    <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between gap-4">
-                        <div class="flex items-center space-x-3 overflow-hidden">
-                            <span class="px-2 py-1 bg-amber-500/20 text-amber-400 rounded text-xs font-bold">DESCARGA</span>
-                            <span class="text-sm font-semibold text-white truncate">${item.title}</span>
-                        </div>
-                        <button onclick="deleteContentItem('downloads', '${item.id}')" class="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/40 text-red-300 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 flex-shrink-0">
-                            <i class="fa-solid fa-trash"></i> Eliminar
-                        </button>
-                    </div>
-                `;
-            });
-
-            appData.comics.forEach(item => {
-                inventoryHtml += `
-                    <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between gap-4">
-                        <div class="flex items-center space-x-3 overflow-hidden">
-                            <span class="px-2 py-1 bg-purple-500/20 text-purple-400 rounded text-xs font-bold">CÓMIC</span>
-                            <span class="text-sm font-semibold text-white truncate">${item.title}</span>
-                        </div>
-                        <button onclick="deleteContentItem('comics', '${item.id}')" class="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/40 text-red-300 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 flex-shrink-0">
-                            <i class="fa-solid fa-trash"></i> Eliminar
-                        </button>
-                    </div>
-                `;
-            });
-
-            container.innerHTML = inventoryHtml || '<p class="text-slate-500 text-sm italic">No hay contenidos registrados.</p>';
-        }
-
-        function updateAdminStats() {
-            document.getElementById('stat-videos').textContent = appData.videos.length;
-            document.getElementById('stat-images').textContent = appData.images.length;
-            document.getElementById('stat-downloads').textContent = appData.downloads.length;
-            document.getElementById('stat-comics').textContent = appData.comics.length;
-        }
-
-        function renderAdminUsers() {
-            const container = document.getElementById('admin-users-list-container');
-            if (!container) return;
-
-            container.innerHTML = appData.users.map(u => {
-                const isCurrent = authenticatedUser && u.username.toLowerCase() === authenticatedUser.toLowerCase();
-                return `
-                    <div class="bg-slate-950 p-4 rounded-xl border ${isCurrent ? 'border-cyan-500/60 bg-cyan-950/20' : 'border-slate-800'} flex items-center justify-between gap-4">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-cyan-400 font-bold">
-                                <i class="fa-solid fa-user"></i>
-                            </div>
-                            <div>
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-sm font-bold text-white">${u.username}</span>
-                                    ${isCurrent ? '<span class="text-[10px] bg-cyan-500/20 text-cyan-300 font-semibold px-2 py-0.5 rounded border border-cyan-500/30">Sesión Activa</span>' : ''}
-                                </div>
-                                <p class="text-xs text-slate-400">Rol: <span class="text-slate-300 font-medium">${u.role}</span> • PIN: <span class="font-mono text-slate-500">••••••</span></p>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            ${!isCurrent && appData.users.length > 1 ? `
-                                <button onclick="deleteUser('${u.id}')" class="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/40 text-red-300 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5">
-                                    <i class="fa-solid fa-user-minus"></i> Eliminar
-                                </button>
-                            ` : '<span class="text-xs text-slate-500 italic">Usuario Principal</span>'}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function handleAdminChangePassword(e) {
-            e.preventDefault();
-            const newUsername = (document.getElementById('input-edit-username').value || '').trim();
-            const currPin = (document.getElementById('input-curr-pin').value || '').trim();
-            const newPin = (document.getElementById('input-new-pin').value || '').trim();
-            const confirmPin = (document.getElementById('input-confirm-pin').value || '').trim();
-
-            // Find active authenticated user or default to first admin user
-            const currentActiveName = authenticatedUser || (appData.users[0] ? appData.users[0].username : 'admin');
-            let userObj = appData.users.find(u => u.username.toLowerCase() === currentActiveName.toLowerCase());
-
-            if (!userObj && appData.users.length > 0) {
-                userObj = appData.users[0];
-            }
-
-            if (!userObj) {
-                showToast('Error: No se encontró ninguna cuenta registrada.', 'fa-circle-xmark text-red-400');
-                return;
-            }
-
-            // Verify current PIN (flexible string conversion)
-            const storedPinStr = String(userObj.pin || '123456').trim();
-            if (storedPinStr !== currPin) {
-                showToast(`PIN actual incorrecto. El PIN registrado para "${userObj.username}" no coincide.`, 'fa-circle-xmark text-red-400');
-                return;
-            }
-
-            if (!newUsername) {
-                showToast('Debes ingresar un nombre de usuario válido.', 'fa-triangle-exclamation text-amber-400');
-                return;
-            }
-
-            if (newPin.length !== 6 || !/^\d+$/.test(newPin)) {
-                showToast('El nuevo PIN debe contener exactamente 6 dígitos numéricos.', 'fa-triangle-exclamation text-amber-400');
-                return;
-            }
-
-            if (newPin !== confirmPin) {
-                showToast('Los nuevos PINs introducidos no coinciden.', 'fa-circle-xmark text-red-400');
-                return;
-            }
-
-            // Update user record
-            userObj.username = newUsername;
-            userObj.pin = newPin;
-            authenticatedUser = newUsername;
-
-            saveDataToStorage();
-            renderAll();
-            updateAccessBadgeUI();
-
-            document.getElementById('input-curr-pin').value = '';
-            document.getElementById('input-new-pin').value = '';
-            document.getElementById('input-confirm-pin').value = '';
-
-            showToast(`¡Perfil actualizado! Usuario: ${newUsername}, Nuevo PIN guardado.`, 'fa-shield-check text-emerald-400');
-        }
-
-        function resetAdminCredentialsToDefault() {
-            let adminUser = appData.users.find(u => u.role === 'Administrador');
-            if (!adminUser) {
-                adminUser = { id: 'u1', username: 'admin', pin: '123456', role: 'Administrador' };
-                appData.users.unshift(adminUser);
-            } else {
-                adminUser.username = 'admin';
-                adminUser.pin = '123456';
-            }
-            authenticatedUser = 'admin';
-            accessMode = 'private';
-            saveDataToStorage();
-            renderAll();
-            updateAccessBadgeUI();
-            const editField = document.getElementById('input-edit-username');
-            if (editField) editField.value = 'admin';
-            showToast('Credenciales restablecidas a: admin / 123456', 'fa-key text-amber-400');
-        }
-
-        function handleAdminAddUser(e) {
-            e.preventDefault();
-            const username = (document.getElementById('input-user-name').value || '').trim();
-            const pin = (document.getElementById('input-user-pin').value || '').trim();
-            const role = document.getElementById('input-user-role').value;
-
-            if (pin.length !== 6 || !/^\d+$/.test(pin)) {
-                showToast('El PIN debe tener 6 dígitos numéricos.', 'fa-triangle-exclamation text-amber-400');
-                return;
-            }
-
-            if (appData.users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
-                showToast('Ese nombre de usuario ya existe.', 'fa-circle-xmark text-red-400');
-                return;
-            }
-
-            appData.users.push({ id: 'u_' + Date.now(), username, pin, role });
-            saveDataToStorage();
-            renderAll();
-            e.target.reset();
-            showToast(`Usuario "${username}" creado`, 'fa-user-plus text-emerald-400');
-        }
-
-        function deleteUser(id) {
-            appData.users = appData.users.filter(u => u.id !== id);
-            saveDataToStorage();
-            renderAll();
-            showToast('Usuario eliminado', 'fa-trash-can text-amber-400');
-        }
-
-        function toggleGlobalMute() {
-            isMuted = !isMuted;
-            applyMuteState();
-
-            const muteIcon = document.getElementById('mute-icon');
-            const muteLabel = document.getElementById('mute-label');
-
-            if (isMuted) {
-                if (muteIcon) muteIcon.className = 'fa-solid fa-volume-xmark text-red-400 text-sm';
-                if (muteLabel) muteLabel.textContent = 'Sonido MUTE';
-                showToast('Sonido silenciado globalmente', 'fa-volume-xmark text-red-400');
-            } else {
-                if (muteIcon) muteIcon.className = 'fa-solid fa-volume-high text-emerald-400 text-sm';
-                if (muteLabel) muteLabel.textContent = 'Sonido ON';
-                showToast('Sonido activado', 'fa-volume-high text-emerald-400');
-            }
-        }
-
-        function applyMuteState() {
-            document.querySelectorAll('video, audio').forEach(media => {
-                media.muted = isMuted;
-                if (isMuted) media.pause();
-            });
-
-            document.querySelectorAll('iframe').forEach(iframe => {
-                try {
-                    if (iframe.contentWindow) {
-                        iframe.contentWindow.postMessage(JSON.stringify({
-                            event: 'command',
-                            func: isMuted ? 'mute' : 'unmute',
-                            args: []
-                        }), '*');
-                    }
-                } catch (err) {}
-            });
-        }
-
-        function openCustomComicReader(comicId) {
-            const comic = appData.comics.find(c => c.id === comicId);
-            if (!comic) return;
-
-            document.getElementById('comic-reader-title').textContent = `${comic.title} (${comic.chapter})`;
-            const readerContainer = document.querySelector('#comic-modal .max-w-xl');
-            
-            readerContainer.innerHTML = comic.pages.map((imgUrl, i) => `
-                <img src="${imgUrl}" class="w-full rounded-xl border border-slate-800 shadow-xl mb-3" onerror="this.onerror=null; this.src='https://placehold.co/600x1066/0f172a/a855f7?text=Pagina+${i+1}'">
-            `).join('');
-
-            document.getElementById('comic-modal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            if (menu) menu.classList.toggle('hidden');
-        }
-
-        function toggleAccordion(id) {
-            const content = document.getElementById(id);
-            const icon = document.getElementById(`acc-icon-${id}`);
-            if (!content) return;
-
-            const isActive = content.classList.contains('active');
-
-            document.querySelectorAll('.accordion-content').forEach(item => item.classList.remove('active'));
-            document.querySelectorAll('[id^="acc-icon-"]').forEach(i => i.classList.remove('rotate-180'));
-
-            if (!isActive) {
-                content.classList.add('active');
-                if (icon) icon.classList.add('rotate-180');
-            }
-        }
-
-        function openImageModal(src, caption) {
-            const modal = document.getElementById('image-modal');
-            const modalImg = document.getElementById('modal-img');
-            modalImg.src = src;
-            document.getElementById('modal-caption').textContent = caption;
-            if (modal) modal.classList.remove('hidden');
-        }
-
-        function closeImageModal() {
-            const modal = document.getElementById('image-modal');
-            if (modal) modal.classList.add('hidden');
-        }
-
-        function closeComicReader() {
-            const modal = document.getElementById('comic-modal');
-            if (modal) modal.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
-
-        function showToast(message, iconClass) {
-            const toast = document.getElementById('toast');
-            if (!toast) return;
-            document.getElementById('toast-message').textContent = message;
-            document.getElementById('toast-icon').className = `fa-solid ${iconClass} text-lg`;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3500);
-        }
-
-        // Initialize Web Application
-        window.addEventListener('DOMContentLoaded', () => {
-            loadDataFromStorage();
-            renderAll();
-            applyMuteState();
-        });
-    </script>
+        state.items.push(record);persist();toast(`${typeNames[selectedType].slice(0,-1)} publicado correctamente.`);render()
+      }
+      function deleteItem(itemId){
+        const item=state.items.find(x=>x.id===itemId);if(!item)return;
+        if(!confirm(`¿Eliminar «${item.title}»? Esta acción no se puede deshacer.`))return;
+        state.items=state.items.filter(x=>x.id!==itemId);if(state.downloads)delete state.downloads[itemId];persist();toast("Contenido eliminado.");render()
+      }
+      function updateProfile(event){
+        event.preventDefault();const data=Object.fromEntries(new FormData(event.currentTarget)),account=user();
+        if(data.currentPin!==account.pin){toast("El PIN actual no es correcto.","error");return}
+        const username=String(data.username||"").trim();if(!username){toast("El nombre de usuario no puede quedar vacío.","error");return}
+        if(state.users.some(u=>u.id!==account.id&&u.username.toLowerCase()===username.toLowerCase())){toast("Ese nombre de usuario ya está en uso.","error");return}
+        if(data.pin&&!/^\d{6}$/.test(data.pin)){toast("El nuevo PIN debe tener exactamente 6 dígitos.","error");return}
+        account.username=username;if(data.pin)account.pin=data.pin;persist();toast("Perfil actualizado.");render()
+      }
+      function createUser(event){
+        event.preventDefault();const data=Object.fromEntries(new FormData(event.currentTarget)),username=String(data.username||"").trim();
+        if(!username||!/^\d{6}$/.test(String(data.pin||""))){toast("El nombre es obligatorio y el PIN debe tener 6 dígitos.","error");return}
+        if(state.users.some(u=>u.username.toLowerCase()===username.toLowerCase())){toast("Ese nombre de usuario ya existe.","error");return}
+        state.users.push({id:id(),username,pin:data.pin,role:data.role});persist();toast("Usuario registrado.");render()
+      }
+      function deleteUser(userId){
+        const target=state.users.find(u=>u.id===userId);if(!target)return;
+        if(target.id===user()?.id){toast("No puedes eliminar la cuenta activa.","error");return}
+        if(target.role==="Administrador"&&state.users.filter(u=>u.role==="Administrador").length<=1){toast("Debe permanecer al menos un administrador.","error");return}
+        if(!confirm(`¿Eliminar la cuenta de ${target.username}?`))return;
+        state.users=state.users.filter(u=>u.id!==userId);persist();toast("Cuenta eliminada.");render()
+      }
+      function resetCredentials(){
+        const account=user();if(!account)return;
+        const conflict=state.users.some(candidate=>candidate.id!==account.id&&candidate.username.toLowerCase()==="admin");
+        if(conflict){toast("Otra cuenta ya usa el nombre admin. Elimínala antes de restablecer tu perfil.","error");return}
+        if(!confirm("Se restablecerá tu cuenta a admin / 123456 y se conservarán las demás cuentas. ¿Continuar?"))return;
+        account.username="admin";account.pin="123456";persist();toast("Tu acceso se restableció a admin / 123456.");render()
+      }
+      function accessModal(){
+        $("#modal-root").innerHTML=`<div class="modal-backdrop fixed inset-0 z-[90] flex items-center justify-center overflow-y-auto p-4"><section class="relative my-auto w-full max-w-4xl overflow-hidden rounded-[28px] border border-white/15 bg-[#10131d] shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="gateway-title"><div class="grid md:grid-cols-[.92fr_1.08fr]"><div class="relative hidden min-h-[510px] overflow-hidden bg-[#151326] md:block"><img src="${img("photo-1519681393784-d120267933ba",1000)}" alt="" class="absolute inset-0 h-full w-full object-cover opacity-45"><div class="absolute inset-0 bg-gradient-to-t from-[#10131d] via-[#10131d]/25 to-violet-950/20"></div><div class="absolute bottom-8 left-8 right-8"><span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-violet-400 text-white"><i class="fa-solid fa-play"></i></span><h2 class="display mt-5 text-3xl font-semibold">Un universo de historias, a tu manera.</h2><p class="mt-3 text-sm leading-6 text-slate-300">Descubre la colección o entra a tu espacio de trabajo privado.</p></div></div><div class="p-6 sm:p-9"><div class="flex items-center gap-2 text-sm font-bold"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-400 text-white"><i class="fa-solid fa-play text-[10px]"></i></span>mediahub<span class="text-violet-300">.</span></div><div class="mt-7"><p class="text-[11px] font-bold uppercase tracking-[.2em] text-violet-300">Puerta de acceso</p><h1 id="gateway-title" class="display mt-2 text-3xl font-semibold">¿Cómo quieres entrar?</h1><p class="mt-2 text-sm leading-6 text-slate-400">Elige una experiencia para comenzar.</p></div>
+          <div class="mt-6 rounded-2xl border border-emerald-300/15 bg-emerald-300/[.04] p-4"><div class="flex items-center gap-3"><span class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-300/10 text-emerald-200"><i class="fa-solid fa-earth-americas"></i></span><div><h2 class="text-sm font-semibold">Modo Público</h2><p class="mt-1 text-xs text-slate-400">Explora todo el contenido disponible para visitantes.</p></div></div><button id="enter-public" class="mt-4 w-full rounded-xl bg-emerald-300 px-4 py-3 text-sm font-bold text-[#0c1914] transition hover:bg-emerald-200">Aceptar y entrar <i class="fa-solid fa-arrow-right ml-1"></i></button></div>
+          <div class="my-5 flex items-center gap-3 text-[10px] uppercase tracking-widest text-slate-600"><span class="h-px flex-1 bg-white/10"></span>o entra con tu cuenta<span class="h-px flex-1 bg-white/10"></span></div>
+          <form id="login-form" class="space-y-3"><div><label for="login-username" class="field-label">Nombre de usuario</label><input class="field" id="login-username" name="username" required autocomplete="username" placeholder="Tu usuario"></div><div><label for="login-pin" class="field-label">PIN privado de 6 dígitos</label><input class="field" id="login-pin" name="pin" type="password" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required autocomplete="current-password" placeholder="••••••"></div><p class="text-[11px] leading-5 text-slate-500"><i class="fa-solid fa-lock mr-1"></i>El modo privado permite acceder al contenido y al estudio según tu rol.</p><button class="btn-primary w-full" type="submit">Entrar en modo privado <i class="fa-solid fa-arrow-right ml-1"></i></button></form>
+          <p class="mt-4 text-center text-[10px] leading-5 text-slate-600">Acceso inicial del administrador: admin / 123456<br>Las cuentas se guardan en este navegador; la autenticación de producción requiere un servidor.</p>
+        </div></div></section></div>`;
+        $("#enter-public").addEventListener("click",()=>{state.session={mode:"public"};persist();$("#modal-root").innerHTML="";page="inicio";if(!location.hash)history.replaceState(null,"","#inicio");render()});
+        $("#login-form").addEventListener("submit",e=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.currentTarget));const found=state.users.find(u=>u.username.toLowerCase()===String(d.username).trim().toLowerCase()&&u.pin===d.pin);if(!found){toast("Usuario o PIN incorrectos.","error");return}state.session={userId:found.id};persist();$("#modal-root").innerHTML="";toast(`Bienvenido, ${found.username}.`);render()})
+      }
+      function applyMute(){
+        $$("video,audio").forEach(media=>{media.muted=state.muted});
+        $$("iframe").forEach(frame=>{try{frame.contentWindow.postMessage(JSON.stringify({event:"command",func:state.muted?"mute":"unMute",args:[]}),"*");frame.contentWindow.postMessage({method:"setMuted",value:state.muted},"*");frame.contentWindow.postMessage({method:"setVolume",value:state.muted?0:1},"*")}catch(error){console.debug("El reproductor integrado no permite controlar el audio.",error)}})
+      }
+      document.addEventListener("click",e=>{
+        const nav=e.target.closest("[data-page]");if(nav){const next=routeAllowed(nav.dataset.page);if(next!==page||nav.dataset.page==="inicio")setHash(next)}
+      });
+      $("#orientation-toggle").addEventListener("click",()=>{state.orientationMode=state.orientationMode==="vertical"?"horizontal":"vertical";persist();render();toast(`Vista ${state.orientationMode==="vertical"?"vertical 9:16":"horizontal 16:9"}.`)});
+      $("#sound-toggle").addEventListener("click",()=>{state.muted=!state.muted;persist();render();toast(state.muted?"Sonido silenciado en todos los reproductores.":"Sonido activado.")});
+      $("#logout-button").addEventListener("click",()=>{state.session=null;persist();activeComic=null;accessModal()});
+      window.addEventListener("hashchange",()=>{page=location.hash.slice(1)||"inicio";activeComic=null;render()});
+      window.addEventListener("storage",e=>{if(e.key===STORAGE_KEY){state=loadState();render()}});
+      if(state.session?.userId&&!user())state.session=null;
+      render();if(!state.session)accessModal();
+    })();
+  </script>
 </body>
 </html>
